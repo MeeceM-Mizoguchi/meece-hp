@@ -236,7 +236,7 @@ export const PresentationRoom: React.FC = () => {
       <Navbar />
 
       {/* モバイル閲覧制限：md未満（768px未満）で表示 */}
-      <div className="md:hidden fixed inset-0 z-100 bg-white flex flex-col items-center justify-center px-8 text-center h-[100dvh] overflow-hidden touch-none">
+      <div className="md:hidden fixed inset-0 z-100 bg-white flex flex-col items-center justify-center px-8 text-center h-dvh overflow-hidden touch-none">
         <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mb-6 border border-slate-100">
           <ShieldAlert className="text-meece-pink" size={32} />
         </div>
