@@ -4,6 +4,7 @@ import { Play, Pause, ChevronLeft, ChevronRight, MessageSquare, ShieldAlert } fr
 import { Navbar } from '../components/organisms/Navbar';
 import { PresentationSlide01 } from '../components/organisms/PresentationSlide01';
 import { PresentationSlide02 } from '../components/organisms/PresentationSlide02';
+import { PresentationSlide02_2 } from '../components/organisms/PresentationSlide02_2';
 import { PresentationSlide03 } from '../components/organisms/PresentationSlide03';
 import { PresentationSlide04 } from '../components/organisms/PresentationSlide04';
 import { PresentationSlide05 } from '../components/organisms/PresentationSlide05';
@@ -20,28 +21,44 @@ import gsap from 'gsap';
 
 export const PresentationRoom: React.FC = () => {
   // --- スライドデータ定義 ---
-  const slides: any[] = [
-    {
-      id: 1,
-      label: "OPENING",
-      title: "すべてのビジネスに、\n輝く「物語」の続きを。",
-      description: "Meeceは、あなたのビジョンを最短距離で形にするプロフェッショナル集団です。",
-      theme: "dark"
-    },
-    {
+  const slides: any[] = [
+    {
+      id: 1,
+      label: "OPENING",
+      title: "すべてのビジネスに、\n輝く「物語」の続きを。",
+      description: "Meeceは、あなたのビジョンを最短距離で形にするプロフェッショナル集団です。",
+      theme: "dark"
+    },
+    {
       id: 2,
-      label: "Roots & History",
-      title: "現場の熱量を、\nITの歯車に変える。",
-      description: "2022年の創業以来、私たちはSES事業を通じて、あらゆる産業の「最前線」に身を置いてきました。机上の空論ではなく、現場の痛みを知るからこそ、真に動くシステムが創れると信じています。",
+      label: "Corporate Profile",
+      title: "会社概要",
       theme: "light",
-      domains: [
+      info: [
+          { label: "商号", value: "Meece株式会社", sub: "ミースカブシキガイシャ" },
+          { label: "代表取締役", value: "溝口 雅登" },
+          { label: "設立", value: "2024年 1月 5日" },
+          { label: "資本金", value: "1,000,000円" },
+          { label: "取引銀行", value: "みずほ銀行", sub: "八重洲口支店" },
+          { label: "所在地", value: "〒100-0005\n東京都千代田区丸の内1-8-3\n丸の内トラストタワー本館 20階" },
+          { label: "連絡先", value: "Meece 事務局", phone: "03-5288-5125", email: "info@meece.io" },
+          { label: "事業内容", value: "AI受託開発 / システムコンサルティング\nDX推進支援 / 多角的事業支援" }
+        ]
+    },
+    {
+      id: 3,
+      label: "Roots & History",
+      title: "現場の熱量を、\nITの歯車に変える。",
+      description: "2022年の創業以来、私たちはSES事業を通じて、あらゆる産業の「最前線」に身を置いてきました。机上の空論ではなく、現場の痛みを知るからこそ、真に動くシステムが創れると信じています。",
+      theme: "light",
+      domains: [
         { char: "M", name: "Manufacturing", desc: "技術継承や生産ラインを効率化。工場の「止まらない物語」をデジタルで支援。" },
         { char: "E", name: "Education", desc: "知識共有を民主化。誰もが最高の教育を享受できる環境をITで構築。" },
         { char: "E", name: "Entertainment", desc: "感動を実装。最新技術で人々の心を動かす、新しい「体験」を創造。" },
         { char: "C", name: "Commerce", desc: "複雑な物流やトレンドを最適化。店舗とユーザーを繋ぐ流通を実装。" },
         { char: "E", name: "Everyday life", desc: "医療・行政・インフラ。日常の当たり前を、より便利で安心なものへ刷新。" }
       ]
-    },
+    },
     {
       id: 3,
       label: "2024-2025: R&D Silent Evolution",
@@ -171,9 +188,9 @@ export const PresentationRoom: React.FC = () => {
 
   // --- 状態管理 ---
   const [currentSlide, setCurrentSlide] = useState(1);
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [progress, setProgress] = useState(0);
-  const totalSlides = 14;
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [progress, setProgress] = useState(0);
+  const totalSlides = 15;
   const slideDuration = 5000; // 5秒
   const slideRef = useRef<HTMLDivElement>(null);
 
@@ -236,7 +253,7 @@ export const PresentationRoom: React.FC = () => {
       <Navbar />
 
       {/* モバイル閲覧制限：md未満（768px未満）で表示 */}
-      <div className="md:hidden fixed inset-0 z-100 bg-white flex flex-col items-center justify-center px-8 text-center h-[100dvh] overflow-hidden touch-none">
+      <div className="md:hidden fixed inset-0 z-100 bg-white flex flex-col items-center justify-center px-8 text-center h-dvh overflow-hidden touch-none">
         <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mb-6 border border-slate-100">
           <ShieldAlert className="text-meece-pink" size={32} />
         </div>
@@ -291,71 +308,76 @@ export const PresentationRoom: React.FC = () => {
           {/* スライドコンテンツ表示エリア */}
           <div className="grow relative bg-slate-900 overflow-hidden min-h-100 md:min-h-0">
             <AnimatePresence mode="wait">
-              {currentSlide === 1 && (
-                <PresentationSlide01 slideRef={slideRef} data={slides[0]} />
-              )}
+              {currentSlide === 1 && (
+                <PresentationSlide01 slideRef={slideRef} data={slides[0]} />
+              )}
 
-              {/* スライド02: Roots & History */}
-              {currentSlide === 2 && (
-                <PresentationSlide02 data={slides[1]} />
-              )}
+              {/* スライド02: Corporate Profile */}
+              {currentSlide === 2 && (
+                <PresentationSlide02_2 data={slides[1]} />
+              )}
 
-              {/* スライド03: R&D Silent Evolution */}
-              {currentSlide === 3 && (
-                <PresentationSlide03 data={slides[2]} />
-              )}
+              {/* スライド03: Roots & History */}
+              {currentSlide === 3 && (
+                <PresentationSlide02 data={slides[2]} />
+              )}
 
-              {/* スライド04: The Pain */}
-              {currentSlide === 4 && (
-                <PresentationSlide04 data={slides[3]} />
-              )}
+              {/* スライド04: R&D Silent Evolution */}
+              {currentSlide === 4 && (
+                <PresentationSlide03 data={slides[3]} />
+              )}
 
-              {/* スライド05: Revolution */}
-              {currentSlide === 5 && (
-                <PresentationSlide05 data={slides[4]} />
-              )}
+              {/* スライド05: The Pain */}
+              {currentSlide === 5 && (
+                <PresentationSlide04 data={slides[4]} />
+              )}
 
-              {/* スライド06: Velocity (Comparison Chart) */}
-                {currentSlide === 6 && (
-                  <PresentationSlide06 data={slides[5]} />
-                )}
+              {/* スライド06: Revolution */}
+              {currentSlide === 6 && (
+                <PresentationSlide05 data={slides[5]} />
+              )}
 
-              {/* スライド07: Outcome (Moving Assets) */}
-              {currentSlide === 7 && (
-                <PresentationSlide07 data={slides[6]} />
-              )}
+              {/* スライド07: Velocity (Comparison Chart) */}
+              {currentSlide === 7 && (
+                <PresentationSlide06 data={slides[6]} />
+              )}
 
-              {/* スライド08: Methodology (Hybrid Flow) - Clean & High Visibility */}
-              {currentSlide === 8 && (
-                <PresentationSlide08 data={slides[7]} />
-              )}
+              {/* スライド08: Outcome (Moving Assets) */}
+              {currentSlide === 8 && (
+                <PresentationSlide07 data={slides[7]} />
+              )}
 
-              {/* スライド09: Finance Strategy - 棒グラフ比較UI */}
-              {currentSlide === 9 && (
-                <PresentationSlide09 />
-              )}
+              {/* スライド09: Methodology (Hybrid Flow) */}
+              {currentSlide === 9 && (
+                <PresentationSlide08 data={slides[8]} />
+              )}
 
-              {/* スライド10: Success Story 01 - A4横レイアウト完全固定版 */}
-              {currentSlide === 10 && (
+              {/* スライド10: Finance Strategy */}
+              {currentSlide === 10 && (
+                <PresentationSlide09 />
+              )}
+
+              {/* スライド11: Success Story 01 */}
+              {currentSlide === 11 && (
                 <PresentationSlide10 />
               )}
 
-              {currentSlide === 11 && (
-                <PresentationSlide11 data={slides[10]} />
-              )}
-
               {currentSlide === 12 && (
-                <PresentationSlide12 data={slides[11]} />
+                <PresentationSlide11 data={slides[11]} />
               )}
 
               {currentSlide === 13 && (
-                <PresentationSlide13 data={slides[12]} />
+                <PresentationSlide12 data={slides[12]} />
               )}
 
               {currentSlide === 14 && (
-                <PresentationSlide14 data={slides[13]} />
+                <PresentationSlide13 data={slides[13]} />
               )}
-            </AnimatePresence>
+
+              {currentSlide === 15 && (
+                <PresentationSlide14 data={slides[14]} />
+              )}
+            </AnimatePresence>
 
             {/* スライド番号 */}
             <div className="absolute top-10 right-16 z-20">
@@ -374,19 +396,20 @@ export const PresentationRoom: React.FC = () => {
               <div className="max-w-3xl overflow-hidden max-h-24 md:max-h-35 py-2 md:py-4 px-2">
                 <p className="text-slate-600 text-[11px] md:text-[15px] leading-tight md:leading-[1.8] font-medium italic line-clamp-2 md:line-clamp-none">
                   {currentSlide === 1 && "Meece株式会社へようこそ。私たちは、あなたの事業という物語を完成させるための最後の一片（ラスト・ピース）です。"}
-                  {currentSlide === 9 && "『ITにはお金がかかる』。それは半分正解で、半分は間違いです。私たちがまず行うのは、あなたの会社のIT予算の『整理』です。古いシステムの維持に消えている無駄なコストを特定し、それを『AI開発ラボ』での爆速検証に充てる。つまり、追加予算なしで新しい挑戦を始める仕組みを創ります。ITを単なる消費に終わらせない。財務的な視点からあなたの事業を強くする。それがMeeceの経営パートナーとしての在り方です。"}
-                  {currentSlide === 2 && "Meeceの歴史は現場から。製造、教育、娯楽、商業、生活。5つの巨大なドメインでの経験こそが、私たちの知能の礎です。"}
-                  {currentSlide === 3 && "2024年、私たちはAI研究開発部門を立ち上げました。一見静かなこの2年間、私たちは来るべきAI時代の基盤を構築していました。SESや受託で得た現場の知見を、どうすればAIでさらに加速できるのか。その答えが、独自のAI駆動開発エンジンです。2026年に解禁される『AI開発ラボ』の驚異的なスピードは、この沈黙の期間の研鑽から生まれています。"}
-                  {currentSlide === 4 && "どんなに優れたビジョンも、開発が停滞してしまえば、それは現実にはなりません。人材の不足、要件の迷走、そこで過去の負債。これらによって引き起こされる『停滞』は、あなたの事業という物語を止めてしまう、目に見えない巨大な経営損失です。私たちは多くの現場でこの絶望を見てきました。だからこそ、Meeceはこの物語を動かす『歯車』を、圧倒的な速度で提供することを決めたのです。"}
-                  {currentSlide === 5 && "『具体的に何をしてくれるのか？』その答えは単純です。皆様が書いた1枚のメモ、あるいは1分の音声指示。それを私たちは最短24時間で、URLを叩けば誰でも触れる『動くプロトタイプ』へと変えます。従来のような分厚い仕様書は不要です。まずは実際に動くものを触り、そこからブラッシュアップしていく。この『実行スピード』こそが、Meeceが提供する新しい開発のスタンダードです。"}
-                  {currentSlide === 6 && "なぜMeeceはこれほどまでに速いのか。その答えは、87.5%という数字に集約されています。従来の開発では、数週間かけていた要件定義や基礎実装を、私たちはAI駆動エンジンによって数日に短縮しました。8週間かかっていたプロジェクトを、わずか1週間で動く形にする。この圧倒的な時間短縮は、あなたのビジネスにおける『試行回数』を8倍に増やし、成功の確率を劇的に引き上げることを意味しています。"}
-                  {currentSlide === 7 && "『24時間で何が変わるのか？』。その答えは、意思決定の劇的な変化です。従来の開発では、数ヶ月かけて作った仕様書を読み込み、会議を重ね、ようやく投資判断を下していました。しかしMeeceなら、明日には動くものを触りながら議論できます。言葉を尽くして説得する時間はもう不要です。目の前の『動く資産』がすべてを証明します。この圧倒的なスピード感こそが、不確実な時代における最大の経営戦略となるのです。"}
-                  {currentSlide === 8 && "Meeceの速さは、単なるスピード違反ではありません。それは、徹底的に洗練された『型』から生まれる正確さの裏返しです。AIが瞬時に形を作り、プロのエンジニアがその品質を研ぎ澄ます。このハイブリッド・フローにより、従来の開発で最もコストとなっていた『手戻り』を最小限に抑えます。速いだけではない、数年先まで使い続けられる堅牢な品質。それがMeeceの約束するスタンダードです。"}
-                  {currentSlide === 10 && "実績の第一例は、ある老舗菓子店様の事例です。守るべき伝統があるからこそ、変えられない非効率に苦しんでおられました。私たちは彼らの『熟練の勘』をAIに学習させ、手書き伝票を全廃する独自の管理システムをわずか10日間で構築しました。結果として、事務工数は80%削減。浮いた時間は、新しい商品開発や接客という『人間が本来やるべき創造的な仕事』に充てられています。デジタルは、伝統を守るための最強の盾になるのです。"}
-                  {currentSlide === 11 && "最後に、私たちの『想い』についてお話しさせてください。Meeceが大切にしているのは、技術力やスピード以上に、『当事者以上の当事者意識』です。私たちは、外部の業者としてではなく、あなたのチームの一員としてプロジェクトに参画します。良いことも、悪いことも、すべてをさらけ出して共に悩み、共に喜ぶ。あなたの物語の最後の一片（ラスト・ピース）として、私たちは誰よりも熱く、誠実に、事業の成功を追い求めます。"}
-                  {currentSlide === 12 && "最後に、Meeceの未来についてお話しします。私たちは、単なる開発会社で終わるつもりはありません。AI開発ラボで研鑽してきた圧倒的な技術力、そして皆様と共に流してきた現場の汗。そのすべてを糧に、2026年、私たちは自社オリジナルのAIプロダクトを解禁します。他者の物語を完成させてきた私たちが、今度は自らの物語で世界を動かす。Meeceの真の革命は、ここから始まります。どうぞ、これからの私たちに、大いにご期待ください。"}
-                  {currentSlide === 13 && "Meeceがお届けする物語は、ここで一度幕を閉じます。しかし、あなたの事業の物語は、ここからが本番です。私たちが提供するのは、単なるシステムではありません。あなたの想いを、誰よりも早く、誰よりも熱く形にする『実行力』です。次のページに何を書くか。その一歩を、私たちと共に踏み出しませんか？まずは診断、あるいはお問い合わせから。あなたからのコンタクトを、心よりお待ちしております。"}
-                  {currentSlide === 14 && "最後までご清聴いただき、誠にありがとうございました。私たちの挑戦は、AIという通過点に留まりません。Meeceが見据えているのは、その先にある、まだ名前も付いていないような新技術の開拓です。人間の創造性を極限まで高めるための、真のイノベーション。その歴史の続きを、いつかあなたと共に語れる日を楽しみにしています。すべてのビジネスに、輝く物語の続きを。Meece株式会社でした。"}
+                  {currentSlide === 2 && "まずはじめに、私たちの会社概要についてご紹介いたします。Meeceは2022年に設立された、ITとAIの力を信じるプロフェッショナル集団です。"}
+                  {currentSlide === 3 && "Meeceの歴史は現場から。製造、教育、娯楽、商業、生活。5つの巨大なドメインでの経験こそが、私たちの知能の礎です。"}
+                  {currentSlide === 4 && "2024年、私たちはAI研究開発部門を立ち上げました。一見静かなこの2年間、私たちは来るべきAI時代の基盤を構築していました。SESや受託で得た現場の知見を、どうすればAIでさらに加速できるのか。その答えが、独自のAI駆動開発エンジンです。2026年に解禁される『AI開発ラボ』の驚異的なスピードは、この沈黙の期間の研鑽から生まれています。"}
+                  {currentSlide === 5 && "どんなに優れたビジョンも、開発が停滞してしまえば、それは現実にはなりません。人材の不足、要件の迷走、そこで過去の負債。これらによって引き起こされる『停滞』は、あなたの事業という物語を止めてしまう、目に見えない巨大な経営損失です。私たちは多くの現場でこの絶望を見てきました。だからこそ、Meeceはこの物語を動かす『歯車』を、圧倒的な速度で提供することを決めたのです。"}
+                  {currentSlide === 6 && "『具体的に何をしてくれるのか？』その答えは単純です。皆様が書いた1枚のメモ、あるいは1分の音声指示。それを私たちは最短24時間で、URLを叩けば誰でも触れる『動くプロトタイプ』へと変えます。従来のような分厚い仕様書は不要です。まずは実際に動くものを触り、そこからブラッシュアップしていく。この『実行スピード』こそが、Meeceが提供する新しい開発のスタンダードです。"}
+                  {currentSlide === 7 && "なぜMeeceはこれほどまでに速いのか。その答えは、87.5%という数字に集約されています。従来の開発では、数週間かけていた要件定義や基礎実装を、私たちはAI駆動エンジンによって数日に短縮しました。8週間かかっていたプロジェクトを、わずか1週間で動く形にする。この圧倒的な時間短縮は、あなたのビジネスにおける『試行回数』を8倍に増やし、成功の確率を劇的に引き上げることを意味しています。"}
+                  {currentSlide === 8 && "『24時間で何が変わるのか？』。その答えは、意思決定の劇的な変化です。従来の開発では、数ヶ月かけて作った仕様書を読み込み、会議を重ね、ようやく投資判断を下していました。しかしMeeceなら、明日には動くものを触りながら議論できます。言葉を尽くして説得する時間はもう不要です。目の前の『動く資産』がすべてを証明します。この圧倒的なスピード感こそが、不確実な時代における最大の経営戦略となるのです。"}
+                  {currentSlide === 9 && "Meeceの速さは、単なるスピード違反ではありません。それは、徹底的に洗練された『型』から生まれる正確さの裏返しです。AIが瞬時に形を作り、プロのエンジニアがその品質を研ぎ澄ます。このハイブリッド・フローにより、従来の開発で最もコストとなっていた『手戻り』を最小限に抑えます。速いだけではない、数年先まで使い続けられる堅牢な品質。それがMeeceの約束するスタンダードです。"}
+                  {currentSlide === 10 && "『ITにはお金がかかる』。それは半分正解で、半分は間違いです。私たちがまず行うのは、あなたの会社のIT予算の『整理』です。古いシステムの維持に消えている無駄なコストを特定し、それを『AI開発ラボ』での爆速検証に充てる。つまり、追加予算なしで新しい挑戦を始める仕組みを創ります。ITを単なる消費に終わらせない。財務的な視点からあなたの事業を強くする。それがMeeceの経営パートナーとしての在り方です。"}
+                  {currentSlide === 11 && "実績の第一例は、ある老舗菓子店様の事例です。守るべき伝統があるからこそ、変えられない非効率に苦しんでおられました。私たちは彼らの『熟練の勘』をAIに学習させ、手書き伝票を全廃する独自の管理システムをわずか10日間で構築しました。結果として、事務工数は80%削減。浮いた時間は、新しい商品開発や接客という『人間が本来やるべき創造的な仕事』に充てられています。デジタルは、伝統を守るための最強の盾になるのです。"}
+                  {currentSlide === 12 && "最後に、私たちの『想い』についてお話しさせてください。Meeceが大切にしているのは、技術力やスピード以上に、『当事者以上の当事者意識』です。私たちは、外部の業者としてではなく、あなたのチームの一員としてプロジェクトに参画します。良いことも、悪いことも、すべてをさらけ出して共に悩み、共に喜ぶ。あなたの物語の最後の一片（ラスト・ピース）として、私たちは誰よりも熱く、誠実に、事業の成功を追い求めます。"}
+                  {currentSlide === 13 && "最後に、Meeceの未来についてお話しします。私たちは、単なる開発会社で終わるつもりはありません。AI開発ラボで研鑽してきた圧倒的な技術力、電力、とそして皆様と共に流してきた現場の汗。そのすべてを糧に、2026年、私たちは自社オリジナルのAIプロダクトを解禁します。他者の物語を完成させてきた私たちが、今度は自らの物語で世界を動かす。Meeceの真の革命は、ここから始まります。どうぞ、これからの私たちに、大いにご期待ください。"}
+                  {currentSlide === 14 && "Meeceがお届けする物語は、ここで一度幕を閉じます。しかし、あなたの事業の物語は、ここからが本番です。私たちが提供するのは、単なるシステムではありません。あなたの想いを、誰よりも早く、誰よりも熱く形にする『実行力』です。次のページに何を書くか。その一歩を、私たちと共に踏み出しませんか？まずは診断、あるいはお問い合わせから。あなたからのコンタクトを、心よりお待ちしております。"}
+                  {currentSlide === 15 && "最後までご清聴いただき、誠にありがとうございました。私たちの挑戦は、AIという通過点に留まりません。Meeceが見据えているのは、その先にある、まだ名前も付いていないような新技術の開拓です。人間の創造性を極限まで高めるための、真のイノベーション。その歴史の続きを、いつかあなたと共に語れる日を楽しみにしています。すべてのビジネスに、輝く物語の続きを。Meece株式会社でした。"}
                 </p>
               </div>
             </div>
@@ -413,20 +436,20 @@ export const PresentationRoom: React.FC = () => {
               </button>
             </div>
           </div>
-        </div>
-      </main>
+        </div>
+      </main>
 
-      {/* フッター情報 */}
-      <footer className="fixed bottom-0 w-full py-6 px-12 flex justify-between items-center z-50 pointer-events-none">
-        <div className="text-[10px] tracking-widest font-black text-slate-500 uppercase">
-          © 2026 MEECE INC. ALL STORIES RESERVED.
-        </div>
-        <div className="flex items-center gap-2 text-[10px] font-black text-meece-pink uppercase">
-          <ShieldAlert size={14} /> CONFIDENTIAL
-        </div>
-      </footer>
-    </div>
-  );
+      {/* フッター情報 */}
+      <footer className="fixed bottom-0 w-full py-6 px-12 flex justify-between items-center z-50 pointer-events-none">
+        <div className="text-[10px] tracking-widest font-black text-slate-500 uppercase">
+          © 2026 MEECE INC. ALL STORIES RESERVED.
+        </div>
+        <div className="flex items-center gap-2 text-[10px] font-black text-meece-pink uppercase">
+          <ShieldAlert size={14} /> CONFIDENTIAL
+        </div>
+      </footer>
+    </div>
+  );
 };
 
 export default PresentationRoom;
