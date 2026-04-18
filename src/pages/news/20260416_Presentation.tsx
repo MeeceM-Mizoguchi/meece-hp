@@ -133,30 +133,48 @@ const NewsDetail_20260416: React.FC = () => {
             </div>
 
             {/* 最終アクションボタン */}
-            <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px' }}>
-              <a 
-                href="/presentation" 
-                style={{ 
-                  display: 'inline-flex', alignItems: 'center', gap: '8px',
-                  backgroundColor: '#0D1B3E', color: '#FFFFFF', padding: '16px 32px',
-                  borderRadius: '16px', textDecoration: 'none', fontSize: '15px', fontWeight: 900,
-                  transition: 'all 0.3s ease',
-                  boxShadow: '0 8px 16px rgba(13, 27, 62, 0.1)'
-                }}
-              >
-                Meece Presentation Room を直接試す <ChevronRight size={18} />
-              </a>
-              
-              <a 
-                href="/news" 
-                style={{ 
-                  display: 'inline-flex', alignItems: 'center', gap: '8px',
-                  color: '#6B7280', fontSize: '14px', fontWeight: 700, textDecoration: 'none'
-                }}
-              >
-                <ArrowLeft size={16} /> ニュース一覧へ戻る
-              </a>
-            </div>
+            <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px' }}>
+              {windowWidth < 768 ? (
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
+                  <div 
+                    style={{ 
+                      display: 'inline-flex', alignItems: 'center', gap: '8px',
+                      backgroundColor: '#E2E8F0', color: '#94A3B8', padding: '16px 32px',
+                      borderRadius: '16px', fontSize: '15px', fontWeight: 900,
+                      cursor: 'not-allowed', width: 'fit-content'
+                    }}
+                  >
+                    Meece Presentation Room を直接試す <ChevronRight size={18} />
+                  </div>
+                  <p style={{ fontSize: '13px', color: '#F43F5E', fontWeight: 800, backgroundColor: '#FFF1F2', padding: '8px 16px', borderRadius: '8px', border: '1px solid #FECDD3' }}>
+                    ※このコンテンツはPCサイズでの閲覧に限定されています。
+                  </p>
+                </div>
+              ) : (
+                <a 
+                  href="/presentation" 
+                  style={{ 
+                    display: 'inline-flex', alignItems: 'center', gap: '8px',
+                    backgroundColor: '#0D1B3E', color: '#FFFFFF', padding: '16px 32px',
+                    borderRadius: '16px', textDecoration: 'none', fontSize: '15px', fontWeight: 900,
+                    transition: 'all 0.3s ease',
+                    boxShadow: '0 8px 16px rgba(13, 27, 62, 0.1)'
+                  }}
+                >
+                  Meece Presentation Room を直接試す <ChevronRight size={18} />
+                </a>
+              )}
+              
+              <a 
+                href="/news" 
+                style={{ 
+                  display: 'inline-flex', alignItems: 'center', gap: '8px',
+                  color: '#6B7280', fontSize: '14px', fontWeight: 700, textDecoration: 'none'
+                }}
+              >
+                <ArrowLeft size={16} /> ニュース一覧へ戻る
+              </a>
+            </div>
           </div>
         </section>
 
