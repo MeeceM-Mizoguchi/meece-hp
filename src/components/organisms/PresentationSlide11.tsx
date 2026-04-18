@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Heart, Users, Lightbulb, Zap, ShieldCheck } from 'lucide-react';
+import { Heart, Lightbulb, Zap, ShieldCheck } from 'lucide-react';
 
 interface PresentationSlide11Props {
   data: {
