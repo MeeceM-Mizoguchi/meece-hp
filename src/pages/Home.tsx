@@ -38,10 +38,10 @@ function Home() {
           {/* 背景動画：プロジェクト内の main.mp4 を再生 */}
         <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0, overflow: 'hidden' }}>
           <video
-            ref={videoRef}
-            src="/main.mp4"
-            autoPlay
-            loop
+            ref={videoRef}
+            src="/main.mp4"
+            autoPlay
+            loop
             muted
             playsInline
             style={{
