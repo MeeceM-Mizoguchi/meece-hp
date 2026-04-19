@@ -155,9 +155,8 @@ ${formData.message}
       });
 
       if (res.ok) {
-        setIsSubmitted(true);
-        // 送信成功後、3秒後に自動的にモーダルを閉じる場合は以下を追加（お好みで）
-        // setTimeout(() => { setIsModalOpen(false); setIsSubmitted(false); }, 3000);
+        setIsModalOpen(false); // モーダルを閉じる
+        setIsSubmitted(true);  // メイン画面を完了UIに切り替える
       } else {
         throw new Error();
       }
@@ -296,16 +295,45 @@ ${formData.message}
       <Navbar />
       
       <main>
-        {/* 共通のメインビジュアル部品を呼び出し（他ページと余白・構造を統一） */}
-        <PageHero 
-          label="TOOL / 見積もりシミュレーター"
-          titleTop="あなたの物語の費用を、"
-          titleGradient="今すぐシミュレート。"
-          description="いくつかの質問に答えるだけで、プロジェクトの概算予算を算出します。そのままPDFでの保存や、詳しい相談へのスムーズな移行が可能です。"
-          windowWidth={windowWidth}
-        />
+        {/* 共通のメインビジュアル部品を呼び出し（他ページと余白・構造を統一） */}
+        <PageHero 
+          label="TOOL / 見積もりシミュレーター"
+          titleTop={isSubmitted ? "お問い合わせ" : "あなたの物語の費用を、"}
+          titleGradient={isSubmitted ? "ありがとうございます。" : "今すぐシミュレート。"}
+          description={isSubmitted ? "送信が完了いたしました。内容を確認の上、担当者より折り返しご連絡させていただきます。" : "いくつかの質問に答えるだけで、プロジェクトの概算予算を算出します。そのままPDFでの保存や、詳しい相談へのスムーズな移行が可能です。"}
+          windowWidth={windowWidth}
+        />
 
-        <section ref={simulatorRef} style={{ padding: '80px 24px', maxWidth: '1200px', margin: '0 auto' }}>
+        {isSubmitted ? (
+          /* 送信完了後のUI */
+          <section style={{ padding: '100px 24px', textAlign: 'center' }}>
+            <div style={{ maxWidth: '600px', margin: '0 auto', backgroundColor: '#F8FAFC', padding: '60px', borderRadius: '48px', border: '1px solid #E2E8F0' }}>
+              <div style={{ width: '80px', height: '80px', backgroundColor: '#F0FDF4', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 32px' }}>
+                <Sparkles size={40} color="#22C55E" />
+              </div>
+              <h2 style={{ fontSize: '24px', fontWeight: 900, color: '#0D1B3E', marginBottom: '16px' }}>送信が完了しました</h2>
+              <p style={{ color: '#64748B', fontSize: '15px', lineHeight: 1.8, marginBottom: '40px' }}>
+                シミュレーション結果を含めたお問い合わせを承りました。<br />
+                通常2営業日以内に、担当者よりメールにてご連絡を差し上げます。
+              </p>
+              <button 
+                onClick={() => {
+                  setSelectedType(null);
+                  setOptions([]);
+                  setScreens(1);
+                  setCurrentStep(1);
+                  setIsSubmitted(false);
+                }}
+                style={{ padding: '16px 40px', borderRadius: '16px', backgroundColor: '#0D1B3E', color: '#FFF', fontWeight: 900, border: 'none', cursor: 'pointer', fontSize: '15px' }}
+              >
+                シミュレーターに戻る
+              </button>
+            </div>
+          </section>
+        ) : (
+          <>
+          {/* 通常の見積もりシミュレーターUI（ここから既存のコード） */}
+        <section ref={simulatorRef} style={{ padding: '80px 24px', maxWidth: '1200px', margin: '0 auto' }}>
           {/* AI開発モードトグル：モバイルでの見切れを防止するため flex-direction を可変に */}
           <div style={{ 
             backgroundColor: '#FFFFFF', 
@@ -730,9 +758,9 @@ ${formData.message}
               </div>
             </div>
           </div>
-        </section> {/* シミュレーターセクションの閉じタグ */}
+        </section>
 
-        {/* スケジュールセクション：1画面(100vh)に収めるための設定 */}
+        {/* スケジュールセクション：1画面(100vh)に収めるための設定 */}
         <section ref={scheduleRef} style={{ 
           minHeight: '100vh', 
           display: 'flex', 
@@ -826,10 +854,12 @@ ${formData.message}
               </div>
             )}
           </div>
-        </section>
+        </section>
+        </>
+      )}
 
-        {/* 共通フッターの呼び出し */}
-        <Footer />
+        {/* 共通フッターの呼び出し */}
+        <Footer />
       </main>
 
       {/* 問い合わせフォームモーダル */}
@@ -839,30 +869,11 @@ ${formData.message}
             <button onClick={() => setIsModalOpen(false)} style={{ position: 'absolute', top: '24px', right: '24px', background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer', color: '#94A3B8' }}>×</button>
             
             <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-              <h3 style={{ fontSize: '24px', fontWeight: 900, color: '#0D1B3E' }}>
-                {isSubmitted ? '送信が完了しました' : '詳細を相談する'}
-              </h3>
-              <p style={{ fontSize: '14px', color: '#64748B', marginTop: '8px' }}>
-                {isSubmitted 
-                  ? 'お問い合わせいただきありがとうございます。内容を確認の上、担当者より折り返しご連絡させていただきます。' 
-                  : '現在のシミュレーション結果を添えて、担当へ相談できます。'}
-              </p>
+              <h3 style={{ fontSize: '24px', fontWeight: 900, color: '#0D1B3E' }}>詳細を相談する</h3>
+              <p style={{ fontSize: '14px', color: '#64748B', marginTop: '8px' }}>現在のシミュレーション結果を添えて、担当へ相談できます。</p>
             </div>
 
-            {isSubmitted ? (
-              <div style={{ textAlign: 'center', padding: '40px 0' }}>
-                <div style={{ width: '80px', height: '80px', backgroundColor: '#F0FDF4', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
-                  <Sparkles size={40} color="#22C55E" />
-                </div>
-                <button 
-                  onClick={() => { setIsModalOpen(false); setIsSubmitted(false); }}
-                  style={{ padding: '12px 32px', borderRadius: '12px', backgroundColor: '#0D1B3E', color: '#FFF', fontWeight: 900, border: 'none', cursor: 'pointer' }}
-                >
-                  閉じる
-                </button>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
               <div>
                 <label style={{ fontSize: '12px', fontWeight: 900, color: '#0D1B3E', display: 'block', marginBottom: '8px' }}>お名前 <span style={{ color: '#EF4444' }}>*</span></label>
                 <input required type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', border: '1px solid #E2E8F0', outline: 'none' }} placeholder="お名前" />
@@ -902,12 +913,11 @@ ${formData.message}
                 {isSending ? '送信中...' : 'この内容で問い合わせを送信'}
               </button>
             </form>
-            )}
           </div>
         </div>
       )}
     </div>
- );
-}
+  );
+};
 
 export default Estimate;
