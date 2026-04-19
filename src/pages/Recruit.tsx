@@ -112,9 +112,9 @@ export const Recruit: React.FC = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    const mailText = `
-【応募区分】
-${formData.type}
+    const mailContent = `
+【希望職種】: ${jobTitle}
+【応募区分】: ${formData.type}
 ${formData.type === '中途採用' ? `【転職回数】: ${formData.changeCount}` : ''}
 
 【基本情報】
@@ -148,7 +148,11 @@ ${formData.pr}
           email: formData.email,
           to: 'recruit@meece.co.jp',
           subject: `【採用エントリー】${jobTitle} / ${formData.name}様`,
-          text: mailText
+          message: mailContent,
+          // API側のクラッシュを防ぐためのダミーデータ
+          planName: "採用エントリー",
+          totalPrice: 0,
+          items: []
         }),
       });
 
