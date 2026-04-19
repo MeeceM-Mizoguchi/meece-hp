@@ -21,9 +21,19 @@ const Estimate: React.FC = () => {
   const [scale, setScale] = useState(1.5);
   const [screens, setScreens] = useState(1);
   const [options, setOptions] = useState<{id: string, label: string, price: number}[]>([]);
-  const [currentStep, setCurrentStep] = useState(1); // 現在の質問番号を管理
-  
-  const simulatorRef = useRef<HTMLDivElement>(null);
+  const [currentStep, setCurrentStep] = useState(1); // 現在の質問番号を管理
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    company: '',
+    isIndividual: false,
+    status: 'すぐにでも開発を始めたい',
+    message: ''
+  });
+  const [isSending, setIsSending] = useState(false);
+  
+  const simulatorRef = useRef<HTMLDivElement>(null);
   const scheduleRef = useRef<HTMLDivElement>(null);
 
   // オプション定義
@@ -109,9 +119,54 @@ const Estimate: React.FC = () => {
     }
 
     pdf.save(`Meece_Estimate_${new Date().getTime()}.pdf`);
-  };
+  };
 
-  return (
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSending(true);
+
+    const estimateDetails = `
+【シミュレーション内容】
+領域: ${selectedType?.name}
+ボリューム: ${scale === 1 ? '小規模' : scale === 1.5 ? '中規模' : '大規模'}
+画面数: ${screens}枚
+開発モード: ${isAiMode ? 'AI MODE' : 'NORMAL'}
+オプション: ${options.map(o => o.label).join(', ') || 'なし'}
+概算金額: ¥${totalAmount.toLocaleString()} 〜
+想定期間: 約${duration}ヶ月
+
+【お客様情報】
+会社名: ${formData.isIndividual ? '個人事業主' : formData.company}
+状況: ${formData.status}
+メッセージ:
+${formData.message}
+    `;
+
+    try {
+      const res = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          message: estimateDetails,
+        }),
+      });
+
+      if (res.ok) {
+        alert('お問い合わせありがとうございます。送信が完了しました。');
+        setIsModalOpen(false);
+      } else {
+        throw new Error();
+      }
+    } catch (error) {
+      alert('送信に失敗しました。お手数ですが info@meece.io まで直接ご連絡ください。');
+    } finally {
+      setIsSending(false);
+    }
+  };
+
+  return (
     <div style={{ backgroundColor: '#FFFFFF', minHeight: '100vh', width: '100%', margin: 0, padding: 0, overflowX: 'hidden' }}>
       
       {/* PDF出力用隠しコンテナ（画面には表示されません） */}
@@ -604,9 +659,12 @@ const Estimate: React.FC = () => {
                       <FileDown size={16} /> PDF形式で保存する
                     </button>
 
-                      <button style={{ width: '100%', padding: '14px', borderRadius: '12px', backgroundColor: 'transparent', color: '#FFFFFF', border: '1px solid rgba(255,255,255,0.2)', fontWeight: 900, fontSize: '13px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', cursor: 'pointer' }}>
-                        <Mail size={18} /> 詳細を相談する
-                      </button>
+                      <button 
+                        onClick={() => setIsModalOpen(true)}
+                        style={{ width: '100%', padding: '14px', borderRadius: '12px', backgroundColor: 'transparent', color: '#FFFFFF', border: '1px solid rgba(255,255,255,0.2)', fontWeight: 900, fontSize: '13px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', cursor: 'pointer' }}
+                      >
+                        <Mail size={18} /> 詳細を相談する
+                      </button>
 
                       <button 
                         onClick={() => {
@@ -770,9 +828,64 @@ const Estimate: React.FC = () => {
 
         {/* 共通フッターの呼び出し */}
         <Footer />
-      </main>
-    </div>
- );
+      </main>
+
+      {/* 問い合わせフォームモーダル */}
+      {isModalOpen && (
+        <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(13, 27, 62, 0.8)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '20px' }}>
+          <div style={{ backgroundColor: '#FFFFFF', width: '100%', maxWidth: '600px', borderRadius: '32px', padding: windowWidth < 768 ? '30px 20px' : '40px', position: 'relative', maxHeight: '90vh', overflowY: 'auto' }}>
+            <button onClick={() => setIsModalOpen(false)} style={{ position: 'absolute', top: '24px', right: '24px', background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer', color: '#94A3B8' }}>×</button>
+            
+            <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+              <h3 style={{ fontSize: '24px', fontWeight: 900, color: '#0D1B3E' }}>詳細を相談する</h3>
+              <p style={{ fontSize: '14px', color: '#64748B', marginTop: '8px' }}>現在のシミュレーション結果を添えて、担当へ相談できます。</p>
+            </div>
+
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              <div>
+                <label style={{ fontSize: '12px', fontWeight: 900, color: '#0D1B3E', display: 'block', marginBottom: '8px' }}>お名前 <span style={{ color: '#EF4444' }}>*</span></label>
+                <input required type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', border: '1px solid #E2E8F0', outline: 'none' }} placeholder="お名前" />
+              </div>
+
+              <div>
+                <label style={{ fontSize: '12px', fontWeight: 900, color: '#0D1B3E', display: 'block', marginBottom: '8px' }}>メールアドレス <span style={{ color: '#EF4444' }}>*</span></label>
+                <input required type="email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', border: '1px solid #E2E8F0', outline: 'none' }} placeholder="メールアドレス" />
+              </div>
+
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                  <label style={{ fontSize: '12px', fontWeight: 900, color: '#0D1B3E' }}>会社名</label>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', fontSize: '11px', fontWeight: 700, color: '#64748B' }}>
+                    <input type="checkbox" checked={formData.isIndividual} onChange={e => setFormData({...formData, isIndividual: e.target.checked, company: e.target.checked ? '' : formData.company})} />
+                    個人事業主の方はこちら
+                  </label>
+                </div>
+                <input type="text" disabled={formData.isIndividual} value={formData.company} onChange={e => setFormData({...formData, company: e.target.value})} style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', border: '1px solid #E2E8F0', outline: 'none', backgroundColor: formData.isIndividual ? '#F8FAFC' : '#FFF', color: formData.isIndividual ? '#94A3B8' : '#0D1B3E' }} placeholder={formData.isIndividual ? '（個人事業主）' : '御社名'} />
+              </div>
+
+              <div>
+                <label style={{ fontSize: '12px', fontWeight: 900, color: '#0D1B3E', display: 'block', marginBottom: '8px' }}>現在の状況</label>
+                <select value={formData.status} onChange={e => setFormData({...formData, status: e.target.value})} style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', border: '1px solid #E2E8F0', outline: 'none', backgroundColor: '#FFF' }}>
+                  <option>すぐにでも開発を始めたい</option>
+                  <option>社内検討用の正式な見積もりが欲しい</option>
+                  <option>まずは技術的な実現可否を相談したい</option>
+                </select>
+              </div>
+
+              <div>
+                <label style={{ fontSize: '12px', fontWeight: 900, color: '#0D1B3E', display: 'block', marginBottom: '8px' }}>ご要望・メモ</label>
+                <textarea value={formData.message} onChange={e => setFormData({...formData, message: e.target.value})} style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', border: '1px solid #E2E8F0', outline: 'none', minHeight: '100px' }} placeholder="シミュレーターにない機能の相談など"></textarea>
+              </div>
+
+              <button disabled={isSending} type="submit" style={{ width: '100%', padding: '16px', borderRadius: '16px', backgroundColor: '#0D1B3E', color: '#FFF', fontWeight: 900, border: 'none', cursor: isSending ? 'not-allowed' : 'pointer', marginTop: '10px', transition: '0.3s', opacity: isSending ? 0.7 : 1 }}>
+                {isSending ? '送信中...' : 'この内容で問い合わせを送信'}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+ );
 }
 
 export default Estimate;
