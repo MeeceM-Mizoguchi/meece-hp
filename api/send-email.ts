@@ -16,8 +16,8 @@ export default async function handler(
 
   try {
     const data = await resend.emails.send({
-      from: 'Meece HP <onboarding@resend.dev>',
-      to: 'mizoguchi_masato@meece.io',
+      from: 'Meece HP <info@meece.io>',
+      to: 'info@meece.io',
       replyTo: email, // ユーザーのアドレスを返信先に設定
       subject: `【HPお問い合わせ】${name}様より`,
       text: `お名前: ${name}\nメールアドレス: ${email}\n内容:\n${message}`,
@@ -31,6 +31,7 @@ export default async function handler(
 
     return response.status(200).json({ success: true, data });
   } catch (error) {
+    console.error(error);
     return response.status(500).json({ error: 'メール送信に失敗しました' });
   }
 }
