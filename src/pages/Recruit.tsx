@@ -144,23 +144,25 @@ ${formData.pr}
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
           to: 'recruit@meece.co.jp',
           subject: `【採用エントリー】${jobTitle} / ${formData.name}様`,
           text: mailText
         }),
       });
 
-      if (response.ok) {
-        setIsSubmitted(true);
-      } else {
-        alert('送信に失敗しました。時間をおいて再度お試しください。');
-      }
-    } catch (error) {
-      alert('エラーが発生しました。');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+      if (response.ok) {
+        setIsSubmitted(true);
+      } else {
+        alert('送信に失敗しました。時間をおいて再度お試しください。');
+      }
+    } catch (error) {
+      alert('エラーが発生しました。');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
