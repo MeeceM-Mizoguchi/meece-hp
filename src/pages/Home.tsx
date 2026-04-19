@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 // Navbarは1つ上の階層(..)のcomponentsの中にあるので、パスを修正しました
 import { Navbar } from '../components/organisms/Navbar';
 import { Footer } from '../components/organisms/Footer';
+import { ContactForm } from '../components/organisms/ContactForm';
 import gsap from 'gsap';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Code2, BrainCircuit, Compass, Rocket, Zap, Sparkles, CheckCircle2 } from 'lucide-react';
@@ -1194,91 +1195,7 @@ function Home() {
               borderRadius: '2px' 
             }}></div>
 
-            <form style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              <div style={{ 
-                display: 'flex', 
-                flexDirection: windowWidth < 768 ? 'column' : 'row', 
-                gap: '20px' 
-              }}>
-                <input 
-                  type="text" 
-                  placeholder="お名前" 
-                  style={{ 
-                    flex: 1, 
-                    padding: '18px 25px', 
-                    borderRadius: '12px', 
-                    border: '1px solid #F3F4F6', 
-                    backgroundColor: '#F9FAFB',
-                    fontSize: '14px',
-                    outline: 'none'
-                  }} 
-                />
-                <input 
-                  type="email" 
-                  placeholder="メールアドレス" 
-                  style={{ 
-                    flex: 1, 
-                    padding: '18px 25px', 
-                    borderRadius: '12px', 
-                    border: '1px solid #F3F4F6', 
-                    backgroundColor: '#F9FAFB',
-                    fontSize: '14px',
-                    outline: 'none'
-                  }} 
-                />
-              </div>
-              <textarea 
-                placeholder="お問い合わせ内容" 
-                rows={6} 
-                style={{ 
-                  width: '100%', 
-                  padding: '18px 25px', 
-                  borderRadius: '12px', 
-                  border: '1px solid #F3F4F6', 
-                  backgroundColor: '#F9FAFB',
-                  fontSize: '14px',
-                  outline: 'none',
-                  resize: 'none',
-                  boxSizing: 'border-box'
-                }} 
-              />
-              
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', justifyContent: 'center', marginTop: '10px' }}>
-                <input type="checkbox" id="confirm" style={{ width: '16px', height: '16px' }} />
-                <label htmlFor="confirm" style={{ fontSize: '12px', color: '#9CA3AF', cursor: 'pointer' }}>
-                  入力内容に間違いがないか確認しました
-                </label>
-              </div>
-
-              <a 
-                href="mailto:contact@meece.co.jp?subject=お問い合わせ（公式サイトより）"
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.opacity = '0.9';
-                  e.currentTarget.style.transform = 'translateY(-2px)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.opacity = '1';
-                  e.currentTarget.style.transform = 'translateY(0)';
-                }}
-                style={{ 
-                  marginTop: '20px',
-                  padding: '18px',
-                  borderRadius: '12px',
-                  background: 'linear-gradient(to right, #319795, #9D72FF)',
-                  color: '#FFFFFF',
-                  fontSize: '15px',
-                  fontWeight: 'bold',
-                  textDecoration: 'none',
-                  display: 'block',
-                  textAlign: 'center',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease',
-                  boxShadow: '0 10px 20px rgba(49, 130, 206, 0.2)'
-                }}
-              >
-                メッセージを送信
-              </a>
-            </form>
+            <ContactForm />
           </div>
         </section>
 

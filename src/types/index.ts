@@ -27,9 +27,18 @@ export interface AppData {
  * ニュース記事のデータ型（設計書 10.3.1 参照）
  */
 export interface NewsItem {
-  id: string;
-  date: string;
-  category: string;
-  title: string;
-  url: string;
+  id: string;
+  date: string;
+  category: string;
+  title: string;
+  url: string;
+}
+
+/**
+ * お問い合わせフォームの入力データ型
+ */
+export interface ContactFormData {
+  name: string;
+  email: string;
+  message: string;
 }
