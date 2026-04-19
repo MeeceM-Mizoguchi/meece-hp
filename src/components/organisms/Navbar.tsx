@@ -4,7 +4,7 @@ import { Menu, X, ChevronRight, Sparkles } from 'lucide-react';
 export const Navbar: React.FC = () => {
   // isScrolled を削除し、isMenuOpen だけ残します
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
+  const [_windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
