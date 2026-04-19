@@ -32,6 +32,7 @@ const Estimate: React.FC = () => {
     message: ''
   });
   const [isSending, setIsSending] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   
   const simulatorRef = useRef<HTMLDivElement>(null);
   const scheduleRef = useRef<HTMLDivElement>(null);
@@ -154,8 +155,9 @@ ${formData.message}
       });
 
       if (res.ok) {
-        alert('お問い合わせありがとうございます。送信が完了しました。');
-        setIsModalOpen(false);
+        setIsSubmitted(true);
+        // 送信成功後、3秒後に自動的にモーダルを閉じる場合は以下を追加（お好みで）
+        // setTimeout(() => { setIsModalOpen(false); setIsSubmitted(false); }, 3000);
       } else {
         throw new Error();
       }
@@ -837,11 +839,30 @@ ${formData.message}
             <button onClick={() => setIsModalOpen(false)} style={{ position: 'absolute', top: '24px', right: '24px', background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer', color: '#94A3B8' }}>×</button>
             
             <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-              <h3 style={{ fontSize: '24px', fontWeight: 900, color: '#0D1B3E' }}>詳細を相談する</h3>
-              <p style={{ fontSize: '14px', color: '#64748B', marginTop: '8px' }}>現在のシミュレーション結果を添えて、担当へ相談できます。</p>
+              <h3 style={{ fontSize: '24px', fontWeight: 900, color: '#0D1B3E' }}>
+                {isSubmitted ? '送信が完了しました' : '詳細を相談する'}
+              </h3>
+              <p style={{ fontSize: '14px', color: '#64748B', marginTop: '8px' }}>
+                {isSubmitted 
+                  ? 'お問い合わせいただきありがとうございます。内容を確認の上、担当者より折り返しご連絡させていただきます。' 
+                  : '現在のシミュレーション結果を添えて、担当へ相談できます。'}
+              </p>
             </div>
 
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            {isSubmitted ? (
+              <div style={{ textAlign: 'center', padding: '40px 0' }}>
+                <div style={{ width: '80px', height: '80px', backgroundColor: '#F0FDF4', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
+                  <Sparkles size={40} color="#22C55E" />
+                </div>
+                <button 
+                  onClick={() => { setIsModalOpen(false); setIsSubmitted(false); }}
+                  style={{ padding: '12px 32px', borderRadius: '12px', backgroundColor: '#0D1B3E', color: '#FFF', fontWeight: 900, border: 'none', cursor: 'pointer' }}
+                >
+                  閉じる
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
               <div>
                 <label style={{ fontSize: '12px', fontWeight: 900, color: '#0D1B3E', display: 'block', marginBottom: '8px' }}>お名前 <span style={{ color: '#EF4444' }}>*</span></label>
                 <input required type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', border: '1px solid #E2E8F0', outline: 'none' }} placeholder="お名前" />
@@ -881,6 +902,7 @@ ${formData.message}
                 {isSending ? '送信中...' : 'この内容で問い合わせを送信'}
               </button>
             </form>
+            )}
           </div>
         </div>
       )}
