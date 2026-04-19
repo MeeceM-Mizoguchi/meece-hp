@@ -16,9 +16,11 @@ export default async function handler(
 
   try {
     const data = await resend.emails.send({
-      from: 'Meece HP <onboarding@resend.dev>', // 送信元（初期設定用）
-      to: 'mizoguchi_masato@meece.io',           // ★Resend登録時のメールアドレスを入力してください
+      from: 'Meece HP <onboarding@resend.dev>',
+      to: 'mizoguchi_masato@meece.io',
+      replyTo: email, // ユーザーのアドレスを返信先に設定
       subject: `【HPお問い合わせ】${name}様より`,
+      text: `お名前: ${name}\nメールアドレス: ${email}\n内容:\n${message}`,
       html: `
         <p><strong>お名前:</strong> ${name}</p>
         <p><strong>メールアドレス:</strong> ${email}</p>
