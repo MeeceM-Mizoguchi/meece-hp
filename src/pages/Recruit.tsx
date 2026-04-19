@@ -109,20 +109,13 @@ export const Recruit: React.FC = () => {
   });
 
   const handleSubmit = async (e: React.FormEvent, jobTitle: string) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+    e.preventDefault();
+    setIsSubmitting(true);
 
-    try {
-      const response = await fetch('/api/send-email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          to: 'recruit@meece.co.jp',
-          subject: `【採用エントリー】${jobTitle} / ${formData.name}様`,
-          text: `
+    const mailText = `
 【応募区分】
 ${formData.type}
-${formData.type === '中途採用' ? `【転職回数】\n${formData.changeCount}` : ''}
+${formData.type === '中途採用' ? `【転職回数】: ${formData.changeCount}` : ''}
 
 【基本情報】
 氏名: ${formData.name}
@@ -144,9 +137,18 @@ ${formData.pr}
 
 【その他】
 開始可能時期: ${formData.startDate}
-          `
-        }),
-      });
+`.trim();
+
+    try {
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          to: 'recruit@meece.co.jp',
+          subject: `【採用エントリー】${jobTitle} / ${formData.name}様`,
+          text: mailText
+        }),
+      });
 
       if (response.ok) {
         setIsSubmitted(true);
