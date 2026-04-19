@@ -16,11 +16,151 @@ import {
   Rocket
 } from 'lucide-react';
 
+const jobDetails: Record<string, any> = {
+  backend: {
+    label: 'BACKEND ENGINEER',
+    title: 'バックエンドエンジニア (Python／Go)',
+    mission: '受託開発および自社AI開発の拡大に伴い、基幹システムの設計・開発を主導。GitHub Copilot等を積極導入し、生産性を極限まで高める文化があります。',
+    skills: ['PythonまたはGoを用いた実務開発経験', 'Django / Gin / FastAPI等の利用経験', 'AWSの構築・運用知識', 'RDBの設計、クエリ最適化スキル'],
+    stacks: ['Python', 'Go', 'Django', 'AWS', 'Docker', 'PostgreSQL', 'GitHub Copilot'],
+    salary: '400万円〜500万円',
+    time: '10:00〜19:00 (フレックス制)',
+    holiday: '完全週休2日制（土日祝）',
+    welfare: ['通勤手当（全額）', '社会保険完備', '最新AIツール支給', 'リモート・フレックス制度']
+  },
+  secretary: {
+    label: 'EXECUTIVE ASSISTANT / SECRETARY',
+    title: '秘書（社長補佐・事務）',
+    mission: '社長のスケジュール管理や来客対応、書類作成などを通じて、経営を間近でサポートするポジションです。事務作業のみならず、組織運営の円滑化に寄与していただきます。',
+    skills: ['社会人経験（業界不問）', '基本的なPCスキル（Word/Excel/PowerPoint）', '社内外との円滑なコミュニケーション能力', '誠実かつ責任感を持って業務に取り組める方'],
+    stacks: ['Google Workspace', 'Notion', 'Slack', 'ChatGPT', 'Excel', 'PowerPoint'],
+    salary: '300万円〜400万円',
+    time: '10:00〜19:00 (フレックス制)',
+    holiday: '完全週休2日制（土日祝）',
+    welfare: ['通勤手当（全額）', '社会保険完備', '最新AIツール利用環境', '東京駅直結の最新オフィス']
+  },
+  assistant: {
+    label: 'IT ASSISTANT / PMO',
+    title: 'ITアシスタント・進捗管理',
+    mission: 'システム開発プロジェクトにおける議事録作成、進捗管理を担当。未経験からコンサルタントやPMへのキャリアアップを目指せます。',
+    skills: ['社会人経験（1年以上推奨）', '資料作成スキル', 'スケジュール管理の誠実さ', 'チームでの協力体制を大切にできる方'],
+    stacks: ['Slack', 'Notion', 'WBS', 'Jira', 'Excel'],
+    salary: '300万円〜500万円',
+    time: '10:00〜19:00 (フレックス制)',
+    holiday: '完全週休2日制（土日祝）',
+    welfare: ['通勤手当（全額）', '社会保険完備', 'ITパスポート等の資格支援', '土日祝休み']
+  },
+  frontend: {
+    label: 'FRONTEND ENGINEER',
+    title: 'フロントエンドエンジニア (React／Next.js)',
+    mission: 'ReactやNext.jsを駆使し、モダンでレスポンスの良いWebアプリケーションを開発。洗練されたUIの実装を追求してください。',
+    skills: ['React または Next.js による実務開発経験', 'TypeScriptを用いた開発経験', 'Tailwind CSS 等によるUI実装経験', 'デザイナーとの円滑な連携能力'],
+    stacks: ['React', 'Next.js', 'TypeScript', 'Tailwind CSS', 'Vercel', 'Figma'],
+    salary: '400万円〜500万円',
+    time: '10:00〜19:00 (フレックス制)',
+    holiday: '完全週休2日制（土日祝）',
+    welfare: ['通勤手当（全額）', '社会保険完備', 'ハイスペックPC・モニター支給', '書籍購入補助']
+  },
+  pmo: {
+    label: 'MOBILE APP PMO',
+    title: 'プロジェクトマネジメント (PMO)',
+    mission: '大手企業のモバイルアプリ案件を中心にプロジェクトの進捗・品質・コストを管理。開発ベンダーとの橋渡しを担当します。',
+    skills: ['ITプロジェクトにおける進捗管理の実務経験', 'ドキュメント作成・整理能力', '関係各所との調整・ファシリテーション能力'],
+    stacks: ['WBS', 'Slack', 'Notion', 'Jira', 'Zoom / Teams'],
+    salary: '400万円〜500万円',
+    time: '10:00〜19:00 (フレックス制)',
+    holiday: '完全週休2日制（土日祝）',
+    welfare: ['通勤手当（全額）', '社会保険完備', '管理職手当あり', '残業ほぼなし']
+  },
+  infra: {
+    label: 'INFRASTRUCTURE ENGINEER / SRE',
+    title: 'インフラエンジニア (AWS／IaC)',
+    mission: 'システムの盤石な土台を構築・運用。AWSをメインとし、Terraform等を用いたIaCの実践により自動化された環境を提供します。',
+    skills: ['AWS または GCP 環境での構築・運用経験', 'Terraform 等を用いた IaC の知見', 'セキュリティ・障害対応の経験'],
+    stacks: ['AWS', 'Terraform', 'Docker', 'Kubernetes', 'Datadog', 'GitHub Actions'],
+    salary: '400万円〜500万円',
+    time: '10:00〜19:00 (フレックス制)',
+    holiday: '完全週休2日制（土日祝）',
+    welfare: ['通勤手当（全額）', '社会保険完備', 'AWS認定資格等の取得支援', '私服勤務可']
+  }
+};
+
 export const Recruit: React.FC = () => {
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
   const [selectedJob, setSelectedJob] = useState<string | null>(null);
+  
+  // フォーム用State
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [showForm, setShowForm] = useState(false);
+  const [formData, setFormData] = useState({
+    type: '中途採用',
+    changeCount: '0回',
+    name: '',
+    email: '',
+    phone: '',
+    location: '',
+    currentAffiliation: '',
+    portfolioUrl: '',
+    skills: '',
+    reason: '',
+    pr: '',
+    startDate: ''
+  });
 
-  useEffect(() => {
+  const handleSubmit = async (e: React.FormEvent, jobTitle: string) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          to: 'recruit@meece.co.jp',
+          subject: `【採用エントリー】${jobTitle} / ${formData.name}様`,
+          text: `
+【応募区分】
+${formData.type}
+${formData.type === '中途採用' ? `【転職回数】\n${formData.changeCount}` : ''}
+
+【基本情報】
+氏名: ${formData.name}
+メール: ${formData.email}
+電話: ${formData.phone}
+居住地: ${formData.location}
+
+【所属・スキル】
+現在の所属: ${formData.currentAffiliation}
+ポートフォリオURL: ${formData.portfolioUrl}
+得意な技術: ${formData.skills}
+
+【志望理由・自己PR】
+志望理由:
+${formData.reason}
+
+自己PR・実績:
+${formData.pr}
+
+【その他】
+開始可能時期: ${formData.startDate}
+          `
+        }),
+      });
+
+      if (response.ok) {
+        setIsSubmitted(true);
+      } else {
+        alert('送信に失敗しました。時間をおいて再度お試しください。');
+      }
+    } catch (error) {
+      alert('エラーが発生しました。');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
@@ -572,8 +712,7 @@ export const Recruit: React.FC = () => {
               私たちと共に、社会を支え、物語を完成させませんか？
             </p>
 
-            <a 
-              href="mailto:recruit@meece.co.jp?subject=採用エントリー（公式サイトより）"
+            <button 
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'translateY(-5px)';
                 e.currentTarget.style.backgroundColor = '#F3F4F6';
@@ -584,8 +723,7 @@ export const Recruit: React.FC = () => {
                 e.currentTarget.style.backgroundColor = '#FFFFFF';
                 e.currentTarget.style.boxShadow = '0 10px 30px rgba(0,0,0,0.1)';
               }}
-              onClick={(e) => {
-                e.preventDefault();
+              onClick={() => {
                 document.getElementById('positions-section')?.scrollIntoView({ behavior: 'smooth' });
               }}
               style={{ 
@@ -598,14 +736,15 @@ export const Recruit: React.FC = () => {
                 borderRadius: '100px',
                 fontSize: '16px',
                 fontWeight: 900,
-                textDecoration: 'none',
+                border: 'none',
+                cursor: 'pointer',
                 transition: 'all 0.3s ease',
                 boxShadow: '0 10px 30px rgba(0,0,0,0.1)'
               }}
             >
-              今すぐエントリーする
-              <Rocket size={20} />
-            </a>
+              募集中の職種を見る
+              <ChevronRight size={20} />
+            </button>
           </div>
         </section>
       </main>
@@ -662,76 +801,8 @@ export const Recruit: React.FC = () => {
             </button>
 
             {(() => {
-              const jobDetails: Record<string, any> = {
-                backend: {
-                  label: 'BACKEND ENGINEER',
-                  title: 'バックエンドエンジニア (Python／Go)',
-                  mission: '受託開発および自社AI開発の拡大に伴い、基幹システムの設計・開発を主導。GitHub Copilot等を積極導入し、生産性を極限まで高める文化があります。',
-                  skills: ['PythonまたはGoを用いた実務開発経験', 'Django / Gin / FastAPI等の利用経験', 'AWSの構築・運用知識', 'RDBの設計、クエリ最適化スキル'],
-                  stacks: ['Python', 'Go', 'Django', 'AWS', 'Docker', 'PostgreSQL', 'GitHub Copilot'],
-                  salary: '400万円〜500万円',
-                  time: '10:00〜19:00 (フレックス制)',
-                  holiday: '完全週休2日制（土日祝）',
-                  welfare: ['通勤手当（全額）', '社会保険完備', '最新AIツール支給', 'リモート・フレックス制度']
-                },
-                secretary: {
-                  label: 'EXECUTIVE ASSISTANT / SECRETARY',
-                  title: '秘書（社長補佐・事務）',
-                  mission: '社長のスケジュール管理や来客対応、書類作成などを通じて、経営を間近でサポートするポジションです。事務作業のみならず、組織運営の円滑化に寄与していただきます。',
-                  skills: ['社会人経験（業界不問）', '基本的なPCスキル（Word/Excel/PowerPoint）', '社内外との円滑なコミュニケーション能力', '誠実かつ責任感を持って業務に取り組める方'],
-                  stacks: ['Google Workspace', 'Notion', 'Slack', 'ChatGPT', 'Excel', 'PowerPoint'],
-                  salary: '300万円〜400万円',
-                  time: '10:00〜19:00 (フレックス制)',
-                  holiday: '完全週休2日制（土日祝）',
-                  welfare: ['通勤手当（全額）', '社会保険完備', '最新AIツール利用環境', '東京駅直結の最新オフィス']
-                },
-                assistant: {
-                  label: 'IT ASSISTANT / PMO',
-                  title: 'ITアシスタント・進捗管理',
-                  mission: 'システム開発プロジェクトにおける議事録作成、進捗管理を担当。未経験からコンサルタントやPMへのキャリアアップを目指せます。',
-                  skills: ['社会人経験（1年以上推奨）', '資料作成スキル', 'スケジュール管理の誠実さ', 'チームでの協力体制を大切にできる方'],
-                  stacks: ['Slack', 'Notion', 'WBS', 'Jira', 'Excel'],
-                  salary: '300万円〜500万円',
-                  time: '10:00〜19:00 (フレックス制)',
-                  holiday: '完全週休2日制（土日祝）',
-                  welfare: ['通勤手当（全額）', '社会保険完備', 'ITパスポート等の資格支援', '土日祝休み']
-                },
-                frontend: {
-                  label: 'FRONTEND ENGINEER',
-                  title: 'フロントエンドエンジニア (React／Next.js)',
-                  mission: 'ReactやNext.jsを駆使し、モダンでレスポンスの良いWebアプリケーションを開発。洗練されたUIの実装を追求してください。',
-                  skills: ['React または Next.js による実務開発経験', 'TypeScriptを用いた開発経験', 'Tailwind CSS 等によるUI実装経験', 'デザイナーとの円滑な連携能力'],
-                  stacks: ['React', 'Next.js', 'TypeScript', 'Tailwind CSS', 'Vercel', 'Figma'],
-                  salary: '400万円〜500万円',
-                  time: '10:00〜19:00 (フレックス制)',
-                  holiday: '完全週休2日制（土日祝）',
-                  welfare: ['通勤手当（全額）', '社会保険完備', 'ハイスペックPC・モニター支給', '書籍購入補助']
-                },
-                pmo: {
-                  label: 'MOBILE APP PMO',
-                  title: 'プロジェクトマネジメント (PMO)',
-                  mission: '大手企業のモバイルアプリ案件を中心にプロジェクトの進捗・品質・コストを管理。開発ベンダーとの橋渡しを担当します。',
-                  skills: ['ITプロジェクトにおける進捗管理の実務経験', 'ドキュメント作成・整理能力', '関係各所との調整・ファシリテーション能力'],
-                  stacks: ['WBS', 'Slack', 'Notion', 'Jira', 'Zoom / Teams'],
-                  salary: '400万円〜500万円',
-                  time: '10:00〜19:00 (フレックス制)',
-                  holiday: '完全週休2日制（土日祝）',
-                  welfare: ['通勤手当（全額）', '社会保険完備', '管理職手当あり', '残業ほぼなし']
-                },
-                infra: {
-                  label: 'INFRASTRUCTURE ENGINEER / SRE',
-                  title: 'インフラエンジニア (AWS／IaC)',
-                  mission: 'システムの盤石な土台を構築・運用。AWSをメインとし、Terraform等を用いたIaCの実践により自動化された環境を提供します。',
-                  skills: ['AWS または GCP 環境での構築・運用経験', 'Terraform 等を用いた IaC の知見', 'セキュリティ・障害対応の経験'],
-                  stacks: ['AWS', 'Terraform', 'Docker', 'Kubernetes', 'Datadog', 'GitHub Actions'],
-                  salary: '400万円〜500万円',
-                  time: '10:00〜19:00 (フレックス制)',
-                  holiday: '完全週休2日制（土日祝）',
-                  welfare: ['通勤手当（全額）', '社会保険完備', 'AWS認定資格等の取得支援', '私服勤務可']
-                }
-              };
-
-              const data = jobDetails[selectedJob];
+              
+              const data = jobDetails[selectedJob || ''];
               if (!data) return null;
 
               return (
@@ -798,26 +869,26 @@ export const Recruit: React.FC = () => {
                   </ul>
 
                   <div style={{ display: 'flex', flexDirection: windowWidth < 640 ? 'column' : 'row', alignItems: 'center', gap: '32px', borderTop: '1px solid #F3F4F6', paddingTop: '40px' }}>
-                    <a 
-                      href={`mailto:recruit@meece.co.jp?subject=エントリー：${data.title}`}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.transform = 'translateY(-5px)';
-                        e.currentTarget.style.backgroundColor = '#1A2B5A';
-                        e.currentTarget.style.boxShadow = '0 15px 30px rgba(13, 27, 62, 0.2)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.transform = 'translateY(0)';
-                        e.currentTarget.style.backgroundColor = '#0D1B3E';
-                        e.currentTarget.style.boxShadow = 'none';
-                      }}
-                      style={{
-                        backgroundColor: '#0D1B3E', color: '#FFFFFF', padding: '18px 40px', borderRadius: '16px',
-                        fontSize: '15px', fontWeight: 900, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '12px',
-                        transition: 'all 0.3s ease'
-                      }}
-                    >
-                      この内容でメール応募する <Mail size={18} />
-                    </a>
+                    <button 
+                      onClick={() => setShowForm(true)}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'translateY(-5px)';
+                        e.currentTarget.style.backgroundColor = '#1A2B5A';
+                        e.currentTarget.style.boxShadow = '0 15px 30px rgba(13, 27, 62, 0.2)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'translateY(0)';
+                        e.currentTarget.style.backgroundColor = '#0D1B3E';
+                        e.currentTarget.style.boxShadow = 'none';
+                      }}
+                      style={{
+                        backgroundColor: '#0D1B3E', color: '#FFFFFF', padding: '18px 40px', borderRadius: '16px',
+                        fontSize: '15px', fontWeight: 900, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '12px',
+                        transition: 'all 0.3s ease'
+                      }}
+                    >
+                      この職種にエントリーする <Rocket size={18} />
+                    </button>
                     <button 
                       onClick={() => setSelectedJob(null)}
                       style={{
@@ -834,7 +905,148 @@ export const Recruit: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* エントリーフォーム本体 */}
+      {showForm && (
+        <div style={{
+          position: 'fixed', inset: 0, backgroundColor: 'rgba(255, 255, 255, 0.98)',
+          zIndex: 200, overflowY: 'auto', padding: windowWidth < 768 ? '20px 16px' : '40px 20px'
+        }}>
+          <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+            <button 
+              onClick={() => { setShowForm(false); setIsSubmitted(false); }}
+              style={{ float: 'right', border: 'none', background: 'none', cursor: 'pointer', color: '#9CA3AF' }}
+            >
+              <X size={32} />
+            </button>
+
+            {isSubmitted ? (
+              <div style={{ textAlign: 'center', padding: '80px 0' }}>
+                <div style={{ width: '80px', height: '80px', backgroundColor: '#E6FFFA', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 32px', color: '#319795' }}>
+                  <ShieldCheck size={40} />
+                </div>
+                <h2 style={{ fontSize: '24px', fontWeight: 900, color: '#0D1B3E', marginBottom: '16px' }}>エントリーを完了しました</h2>
+                <p style={{ color: '#6B7280', lineHeight: 1.8 }}>
+                  内容を確認し、3営業日以内に担当者よりご連絡いたします。<br />
+                  今しばらくお待ちください。
+                </p>
+                <button 
+                  onClick={() => { setShowForm(false); setSelectedJob(null); setIsSubmitted(false); }}
+                  style={{ marginTop: '40px', padding: '16px 40px', backgroundColor: '#0D1B3E', color: '#FFF', borderRadius: '12px', border: 'none', fontWeight: 900, cursor: 'pointer' }}
+                >
+                  閉じる
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={(e) => handleSubmit(e, jobDetails[selectedJob || '']?.title)}>
+                <p style={{ color: '#319795', fontWeight: 900, fontSize: '12px', letterSpacing: '0.2em', marginBottom: '8px' }}>ENTRY FORM</p>
+                <h2 style={{ fontSize: windowWidth < 768 ? '24px' : '28px', fontWeight: 900, color: '#0D1B3E', marginBottom: '40px' }}>
+                  {jobDetails[selectedJob || '']?.title} への応募
+                </h2>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                  {/* 応募区分 */}
+                  <div>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: 900, color: '#0D1B3E', marginBottom: '12px' }}>応募区分 <span style={{ color: '#FF5BAE' }}>*</span></label>
+                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                      {['中途採用', '新卒採用', 'インターン'].map(t => (
+                        <button
+                          key={t} type="button"
+                          onClick={() => setFormData({...formData, type: t})}
+                          style={{
+                            flex: 1, minWidth: '100px', padding: '12px', borderRadius: '8px', border: formData.type === t ? '2px solid #0D1B3E' : '1px solid #E5E7EB',
+                            backgroundColor: formData.type === t ? '#F8FAFC' : '#FFF', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s'
+                          }}
+                        >{t}</button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* 転職回数（中途のみ表示） */}
+                  {formData.type === '中途採用' && (
+                    <div style={{ animation: 'fadeIn 0.3s ease-out' }}>
+                      <label style={{ display: 'block', fontSize: '14px', fontWeight: 900, color: '#0D1B3E', marginBottom: '12px' }}>これまでの転職回数 <span style={{ color: '#FF5BAE' }}>*</span></label>
+                      <select 
+                        required
+                        value={formData.changeCount}
+                        onChange={(e) => setFormData({...formData, changeCount: e.target.value})}
+                        style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #E5E7EB', backgroundColor: '#FFF' }}
+                      >
+                        {['0回（今回が初めて）', '1回', '2回', '3回', '4回以上'].map(v => <option key={v} value={v}>{v}</option>)}
+                      </select>
+                    </div>
+                  )}
+
+                  <div>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: 900, color: '#0D1B3E', marginBottom: '8px' }}>お名前 <span style={{ color: '#FF5BAE' }}>*</span></label>
+                    <input required style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #E5E7EB' }} 
+                      value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: windowWidth < 640 ? '1fr' : '1fr 1fr', gap: '16px' }}>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '14px', fontWeight: 900, color: '#0D1B3E', marginBottom: '8px' }}>メールアドレス <span style={{ color: '#FF5BAE' }}>*</span></label>
+                      <input required type="email" style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #E5E7EB' }} 
+                        value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '14px', fontWeight: 900, color: '#0D1B3E', marginBottom: '8px' }}>電話番号 <span style={{ color: '#FF5BAE' }}>*</span></label>
+                      <input required type="tel" style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #E5E7EB' }} 
+                        value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: 900, color: '#0D1B3E', marginBottom: '8px' }}>現在の所属（会社・学校）</label>
+                    <input style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #E5E7EB' }} 
+                      value={formData.currentAffiliation} onChange={e => setFormData({...formData, currentAffiliation: e.target.value})} />
+                  </div>
+
+                  <div>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: 900, color: '#0D1B3E', marginBottom: '8px' }}>GitHub / ポートフォリオ / SNS等のURL</label>
+                    <input placeholder="https://..." style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #E5E7EB' }} 
+                      value={formData.portfolioUrl} onChange={e => setFormData({...formData, portfolioUrl: e.target.value})} />
+                  </div>
+
+                  <div>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: 900, color: '#0D1B3E', marginBottom: '8px' }}>得意な技術・これまでの実績</label>
+                    <textarea rows={3} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #E5E7EB' }} 
+                      value={formData.skills} onChange={e => setFormData({...formData, skills: e.target.value})} />
+                  </div>
+
+                  <div>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: 900, color: '#0D1B3E', marginBottom: '8px' }}>Meeceへの志望理由 <span style={{ color: '#FF5BAE' }}>*</span></label>
+                    <textarea required rows={4} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #E5E7EB' }} 
+                      value={formData.reason} onChange={e => setFormData({...formData, reason: e.target.value})} />
+                  </div>
+
+                  <div>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: 900, color: '#0D1B3E', marginBottom: '8px' }}>稼働開始可能時期</label>
+                    <input placeholder="例：2024年4月から、即日など" style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #E5E7EB' }} 
+                      value={formData.startDate} onChange={e => setFormData({...formData, startDate: e.target.value})} />
+                  </div>
+
+                  <button 
+                    disabled={isSubmitting}
+                    type="submit"
+                    style={{
+                      width: '100%', padding: '20px', backgroundColor: '#0D1B3E', color: '#FFF',
+                      borderRadius: '16px', border: 'none', fontWeight: 900, fontSize: '16px',
+                      cursor: isSubmitting ? 'not-allowed' : 'pointer', marginTop: '20px',
+                      transition: 'all 0.3s'
+                    }}
+                  >
+                    {isSubmitting ? '送信中...' : 'エントリーを送信する'}
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
       <Footer />
     </div>
   );
 };
+
+export default Recruit;

@@ -1,11 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Menu, X, ChevronRight, Sparkles } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
   // isScrolled を削除し、isMenuOpen だけ残します
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
 
-  
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+
+    // メニューが開いている間、背後のスクロールを禁止する
+    if (isMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      document.body.style.overflow = 'unset';
+    };
+  }, [isMenuOpen]);
 
   const navLinks = [
     { name: 'TOP', href: '/' },
@@ -238,14 +254,17 @@ export const Navbar: React.FC = () => {
       {/* モバイルメニュー */}
       {isMenuOpen && (
         <div 
-  className="xl:hidden absolute top-full left-0 w-full p-8 flex flex-col gap-6 items-start shadow-2xl max-h-[85vh] overflow-y-auto"
-  style={{ 
-    backgroundColor: '#FFFFFF',
-    borderTop: '1px solid #F3F4F6',
-    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.1)'
-  }}
->
-          <div className="w-full flex flex-col items-center gap-6">
+          className="xl:hidden fixed left-0 w-full p-8 flex flex-col items-start shadow-2xl overflow-y-auto"
+          style={{ 
+            top: '88px',
+            height: 'calc(100vh - 88px)',
+            backgroundColor: '#FFFFFF',
+            borderTop: '1px solid #F3F4F6',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.1)',
+            zIndex: 49
+          }}
+        >
+          <div className="w-full flex flex-col items-stretch gap-6">
             {navLinks.map((link) => (
     <div key={link.name} className="w-full">
       {/* メインリンク */}
@@ -306,8 +325,8 @@ export const Navbar: React.FC = () => {
   ))}
           </div>
 
-          {/* モバイル版アクションボタン：ABOUT US & ESTIMATE & CONTACT */}
-          <div className="w-full flex flex-col gap-4 mt-4 pt-8 border-t border-gray-100">
+          {/* モバイル版アクションボタン：ESTIMATE & CONTACT */}
+          <div className="w-full flex flex-col gap-4 mt-4 pt-8 border-t border-gray-100 pb-10">
             <a 
               href="/estimate" 
               className="w-full py-4 rounded-full text-[13px] font-bold transition-all flex items-center justify-center gap-2 tracking-widest uppercase bg-[#0D1B3E] text-white"
