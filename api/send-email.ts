@@ -2,12 +2,11 @@
 import { Resend } from 'resend';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export default async function handler(
-  request: VercelRequest,
-  response: VercelResponse
+  request: VercelRequest,
+  response: VercelResponse
 ) {
+  const resend = new Resend(process.env.RESEND_API_KEY);
   // POSTメソッド以外は受け付けない
   if (request.method !== 'POST') {
     return response.status(405).json({ error: 'Method not allowed' });
@@ -18,7 +17,7 @@ export default async function handler(
   try {
     const data = await resend.emails.send({
       from: 'Meece HP <onboarding@resend.dev>', // 送信元（初期設定用）
-      to: 'info@meece.io',           // ★ここにあなたのメールアドレスを入力してください
+      to: 'your-registered-email@example.com',           // ★Resend登録時のメールアドレスを入力してください
       subject: `【HPお問い合わせ】${name}様より`,
       html: `
         <p><strong>お名前:</strong> ${name}</p>
