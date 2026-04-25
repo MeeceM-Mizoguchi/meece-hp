@@ -54,139 +54,240 @@ export const ContactForm: React.FC = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-      <div style={{ 
+    <form 
+      onSubmit={handleSubmit} 
+      style={isExpanded ? {
+        position: 'fixed',
+        inset: 0,
+        zIndex: 9999,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        backdropFilter: 'blur(8px)',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '40px 20px',
+        animation: 'fadeIn 0.2s ease'
+      } : { 
         display: 'flex', 
-        flexDirection: window.innerWidth < 768 ? 'column' : 'row', 
-        gap: '20px' 
+        flexDirection: 'column', 
+        gap: '20px',
+        position: 'relative'
+      }}
+    >
+      <div style={isExpanded ? {
+        width: '96%',
+        maxWidth: '1600px',
+        height: '94vh',
+        backgroundColor: '#FFFFFF',
+        borderRadius: '24px',
+        border: '1px solid #E5E7EB',
+        boxShadow: '0 30px 60px -12px rgba(0, 0, 0, 0.25)',
+        display: 'flex',
+        flexDirection: 'column',
+        boxSizing: 'border-box',
+        position: 'relative',
+        overflow: 'hidden'
+      } : {
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '20px'
       }}>
-        <input 
-          type="text" 
-          placeholder="お名前" 
-          required
-          value={formData.name}
-          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-          style={{ 
-            flex: 1, 
-            padding: '18px 25px', 
-            borderRadius: '12px', 
-            border: '1px solid #F3F4F6', 
-            backgroundColor: '#F9FAFB',
-            fontSize: '14px',
-            outline: 'none'
-          }} 
-        />
-        <input 
-          type="email" 
-          placeholder="メールアドレス" 
-          required
-          value={formData.email}
-          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-          style={{ 
-            flex: 1, 
-            padding: '18px 25px', 
-            borderRadius: '12px', 
-            border: '1px solid #F3F4F6', 
-            backgroundColor: '#F9FAFB',
-            fontSize: '14px',
-            outline: 'none'
-          }} 
-        />
-      </div>
-      <div style={{ 
-        position: isExpanded ? 'fixed' : 'relative',
-        inset: isExpanded ? '0' : 'auto',
-        zIndex: isExpanded ? 9999 : 'auto',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: isExpanded ? 'rgba(13, 27, 62, 0.8)' : 'transparent',
-        padding: isExpanded ? '20px' : '0',
-        transition: 'all 0.3s ease'
-      }}>
-        <div style={{ 
-          position: 'relative', 
-          width: isExpanded ? '70%' : '100%', 
-          height: isExpanded ? '70%' : 'auto',
-          transition: 'all 0.3s ease'
+        {isExpanded && (
+          <div style={{ 
+            padding: '32px 40px', 
+            borderBottom: '1px solid #F3F4F6',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            backgroundColor: '#FFFFFF'
+          }}>
+            <div>
+              <h2 style={{ fontSize: '20px', fontWeight: 900, color: '#0D1B3E', margin: 0 }}>新規お問い合わせの作成</h2>
+              <p style={{ fontSize: '13px', color: '#6B7280', margin: '4px 0 0' }}>必要事項をご記入の上、送信してください。</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setIsExpanded(false)}
+              style={{
+                background: '#F3F4F6',
+                border: 'none',
+                borderRadius: '12px',
+                cursor: 'pointer',
+                color: '#4B5563',
+                padding: '10px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              <Minimize2 size={20} />
+            </button>
+          </div>
+        )}
+
+        <div style={{ 
+          padding: isExpanded ? '40px 60px' : '0',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: isExpanded ? '20px' : '24px',
+          overflow: 'hidden',
+          flex: 1
         }}>
-          <textarea 
-            placeholder="お問い合わせ内容" 
-            required
-            rows={isExpanded ? 20 : 6} 
-            value={formData.message}
-            onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-            style={{ 
-              width: '100%', 
-              height: '100%',
-              padding: '40px 25px 25px', 
-              borderRadius: '12px', 
-              border: '1px solid #F3F4F6', 
-              backgroundColor: '#F9FAFB',
-              fontSize: isExpanded ? '16px' : '14px',
-              outline: 'none',
-              resize: 'none',
-              boxSizing: 'border-box',
-              boxShadow: isExpanded ? '0 20px 50px rgba(0,0,0,0.3)' : 'none'
-            }} 
-          />
-          <button
-            type="button"
-            onClick={() => setIsExpanded(!isExpanded)}
-            style={{
-              position: 'absolute',
-              top: '10px',
-              right: '10px',
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              color: '#9CA3AF',
-              padding: '5px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}
-          >
-            {isExpanded ? <Minimize2 size={20} /> : <Maximize2 size={18} />}
-          </button>
+          {(!isExpanded && window.innerWidth >= 768) && (
+            <button
+              type="button"
+              onClick={() => setIsExpanded(true)}
+              style={{
+                position: 'absolute',
+                top: '-45px',
+                right: '0',
+                background: '#FFFFFF',
+                border: '1px solid #E5E7EB',
+                borderRadius: '10px',
+                cursor: 'pointer',
+                color: '#9CA3AF',
+                padding: '8px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.02)',
+                transition: 'all 0.2s ease',
+                zIndex: 10
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = '#319795';
+                e.currentTarget.style.borderColor = '#319795';
+                e.currentTarget.style.backgroundColor = '#F0F9F9';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = '#9CA3AF';
+                e.currentTarget.style.borderColor = '#E5E7EB';
+                e.currentTarget.style.backgroundColor = '#FFFFFF';
+              }}
+              title="全画面表示"
+            >
+              <Maximize2 size={18} />
+            </button>
+          )}
+
+          <div style={{ 
+            display: 'flex', 
+            flexDirection: (window.innerWidth < 768) ? 'column' : 'row', 
+            gap: '20px'
+          }}>
+            <input 
+              type="text" 
+              placeholder="お名前" 
+              required
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              style={{ 
+                flex: 1, 
+                padding: '18px 25px', 
+                borderRadius: '12px', 
+                border: '1px solid #F3F4F6', 
+                backgroundColor: '#F9FAFB',
+                fontSize: '14px',
+                outline: 'none'
+              }} 
+            />
+            <input 
+              type="email" 
+              placeholder="メールアドレス" 
+              required
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              style={{ 
+                flex: 1, 
+                padding: '18px 25px', 
+                borderRadius: '12px', 
+                border: '1px solid #F3F4F6', 
+                backgroundColor: '#F9FAFB',
+                fontSize: '14px',
+                outline: 'none'
+              }} 
+            />
+          </div>
+
+          <div style={{ 
+            width: '100%', 
+            position: 'relative',
+            flex: isExpanded ? 1 : 'none',
+            display: 'flex',
+            flexDirection: 'column'
+          }}>
+            <textarea 
+              placeholder="お問い合わせ内容" 
+              required
+              rows={isExpanded ? undefined : 6} 
+              value={formData.message}
+              onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+              style={{ 
+                width: '100%', 
+                flex: 1,
+                padding: '25px', 
+                borderRadius: '12px', 
+                border: '1px solid #F3F4F6', 
+                backgroundColor: '#F9FAFB',
+                fontSize: '14px',
+                color: '#0D1B3E',
+                outline: 'none',
+                resize: 'none',
+                boxSizing: 'border-box',
+                transition: 'all 0.2s ease',
+                lineHeight: 1.8
+              }} 
+            />
+          </div>
+          
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '10px', 
+            justifyContent: 'center', 
+            marginTop: '10px'
+          }}>
+            <input type="checkbox" id="confirm" required style={{ width: '16px', height: '16px' }} />
+            <label htmlFor="confirm" style={{ fontSize: '14px', color: '#9CA3AF', cursor: 'pointer' }}>
+              入力内容に間違いがないか確認しました
+            </label>
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'center', width: '100%', marginTop: '20px', paddingBottom: isExpanded ? '20px' : '0' }}>
+            <button 
+              type="submit"
+              disabled={isSubmitting}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.opacity = '0.9';
+                e.currentTarget.style.transform = 'translateY(-2px)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.opacity = '1';
+                e.currentTarget.style.transform = 'translateY(0)';
+              }}
+              style={{ 
+                padding: '20px 80px',
+                borderRadius: '12px',
+                background: isSubmitting ? '#9CA3AF' : 'linear-gradient(to right, #319795, #9D72FF)',
+                color: '#FFFFFF',
+                fontSize: '16px',
+                fontWeight: 'bold',
+                border: 'none',
+                textAlign: 'center',
+                cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                transition: 'all 0.3s ease',
+                boxShadow: '0 10px 20px rgba(49, 130, 206, 0.2)',
+                width: isExpanded ? 'auto' : '100%',
+                minWidth: isExpanded ? '400px' : 'none'
+              }}
+            >
+              {isSubmitting ? '送信中...' : 'メッセージを送信'}
+            </button>
+          </div>
         </div>
       </div>
-      
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', justifyContent: 'center', marginTop: '10px' }}>
-        <input type="checkbox" id="confirm" required style={{ width: '16px', height: '16px' }} />
-        <label htmlFor="confirm" style={{ fontSize: '12px', color: '#9CA3AF', cursor: 'pointer' }}>
-          入力内容に間違いがないか確認しました
-        </label>
-      </div>
-
-      <button 
-        type="submit"
-        disabled={isSubmitting}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.opacity = '0.9';
-          e.currentTarget.style.transform = 'translateY(-2px)';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.opacity = '1';
-          e.currentTarget.style.transform = 'translateY(0)';
-        }}
-        style={{ 
-          marginTop: '20px',
-          padding: '18px',
-          borderRadius: '12px',
-          background: isSubmitting ? '#9CA3AF' : 'linear-gradient(to right, #319795, #9D72FF)',
-          color: '#FFFFFF',
-          fontSize: '15px',
-          fontWeight: 'bold',
-          border: 'none',
-          textAlign: 'center',
-          cursor: isSubmitting ? 'not-allowed' : 'pointer',
-          transition: 'all 0.3s ease',
-          boxShadow: '0 10px 20px rgba(49, 130, 206, 0.2)'
-        }}
-      >
-        {isSubmitting ? '送信中...' : 'メッセージを送信'}
-      </button>
-    </form>
+    </form>
   );
 };

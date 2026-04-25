@@ -94,4 +94,5 @@ C:\dev\Meece HP\src\pages\news\20260126_Simulator.tsx
 C:\dev\Meece HP\src\pages\news\20260311_NewsDetail.tsx
 C:\dev\Meece HP\src\pages\news\20260406_RapidPOC.tsx
 C:\dev\Meece HP\src\pages\news\20260416_Presentation.tsx
+C:\dev\Meece HP\src\pages\news\20260424_GW.tsx
 C:\dev\Meece HP\src\types\index.ts
