@@ -21,6 +21,7 @@ import RenewalArticle from './pages/news/20260105_Renewal';
 import NewsDetail from './pages/news/20260311_NewsDetail'; 
 import RapidPOCArticle from './pages/news/20260406_RapidPOC'; 
 import PresentationArticle from './pages/news/20260416_Presentation'; 
+import GWNotice from './pages/news/20260424_GW'; 
 import Estimate from './pages/Estimate'; 
 import { Recruit } from './pages/Recruit'; 
 import PresentationRoom from './pages/PresentationRoom';
@@ -62,6 +63,7 @@ function App() {
         <Route path="/news" element={<News />} />
 
         {/* ニュース詳細記事の設定 */}
+        <Route path="/news/20260424-gw-notice" element={<GWNotice />} />
         <Route path="/news/20260416-presentation" element={<PresentationArticle />} />
         <Route path="/news/20260401-rapid-poc" element={<RapidPOCArticle />} />
         <Route path="/news/20260311-website-update" element={<NewsDetail />} />

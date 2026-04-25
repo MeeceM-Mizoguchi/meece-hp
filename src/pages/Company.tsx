@@ -88,8 +88,8 @@ export const Company: React.FC = () => {
                 { label: '会社設立日', value: '2024年 1月 5日', icon: <Calendar size={20} color="#00FBFF" /> },
                 { label: '資本金', value: '1,000,000円', icon: <CircleDollarSign size={20} color="#00FBFF" /> },
                 { label: '取引先銀行', value: 'みずほ銀行', sub: '八重洲口支店', icon: <Landmark size={20} color="#00FBFF" /> },
-                { label: 'お問い合わせ先', value: '03-5288-5125', email: 'info@meece.io', icon: <Mail size={20} color="#00FBFF" /> },
-              ].map((item, idx) => (
+                { label: 'お問い合わせ先', value: '03-5288-5125', icon: <Mail size={20} color="#00FBFF" /> },
+              ].map((item, idx) => (
                 <div key={idx} style={{ 
                   display: 'flex', borderBottom: idx === 6 ? 'none' : '1px solid #F3F4F6',
                   flexDirection: windowWidth < 768 ? 'column' : 'row'
@@ -111,8 +111,7 @@ export const Company: React.FC = () => {
                       {item.value}
                     </div>
                     {item.sub && <div style={{ fontSize: '10px', color: '#9CA3AF', marginTop: '8px', fontWeight: 800, letterSpacing: '0.1em' }}>{item.sub}</div>}
-                    {item.email && <div style={{ color: '#9D72FF', fontSize: '14px', marginTop: '12px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px' }}><Mail size={14}/> {item.email}</div>}
-                  </div>
+                  </div>
                 </div>
               ))}
             </div>

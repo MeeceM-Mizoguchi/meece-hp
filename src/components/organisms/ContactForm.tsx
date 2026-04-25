@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { type ContactFormData } from '../../types';
+import { Maximize2, Minimize2 } from 'lucide-react';
 
 export const ContactForm: React.FC = () => {
-  const [formData, setFormData] = useState<ContactFormData>({
-    name: '',
-    email: '',
-    message: '',
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState<ContactFormData>({
+    name: '',
+    email: '',
+    message: '',
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [isSent, setIsSent] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -91,26 +93,66 @@ export const ContactForm: React.FC = () => {
           }} 
         />
       </div>
-      <textarea 
-        placeholder="お問い合わせ内容" 
-        required
-        rows={6} 
-        value={formData.message}
-        onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-        style={{ 
-          width: '100%', 
-          padding: '18px 25px', 
-          borderRadius: '12px', 
-          border: '1px solid #F3F4F6', 
-          backgroundColor: '#F9FAFB',
-          fontSize: '14px',
-          outline: 'none',
-          resize: 'none',
-          boxSizing: 'border-box'
-        }} 
-      />
-      
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', justifyContent: 'center', marginTop: '10px' }}>
+      <div style={{ 
+        position: isExpanded ? 'fixed' : 'relative',
+        inset: isExpanded ? '0' : 'auto',
+        zIndex: isExpanded ? 9999 : 'auto',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: isExpanded ? 'rgba(13, 27, 62, 0.8)' : 'transparent',
+        padding: isExpanded ? '20px' : '0',
+        transition: 'all 0.3s ease'
+      }}>
+        <div style={{ 
+          position: 'relative', 
+          width: isExpanded ? '70%' : '100%', 
+          height: isExpanded ? '70%' : 'auto',
+          transition: 'all 0.3s ease'
+        }}>
+          <textarea 
+            placeholder="お問い合わせ内容" 
+            required
+            rows={isExpanded ? 20 : 6} 
+            value={formData.message}
+            onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+            style={{ 
+              width: '100%', 
+              height: '100%',
+              padding: '40px 25px 25px', 
+              borderRadius: '12px', 
+              border: '1px solid #F3F4F6', 
+              backgroundColor: '#F9FAFB',
+              fontSize: isExpanded ? '16px' : '14px',
+              outline: 'none',
+              resize: 'none',
+              boxSizing: 'border-box',
+              boxShadow: isExpanded ? '0 20px 50px rgba(0,0,0,0.3)' : 'none'
+            }} 
+          />
+          <button
+            type="button"
+            onClick={() => setIsExpanded(!isExpanded)}
+            style={{
+              position: 'absolute',
+              top: '10px',
+              right: '10px',
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              color: '#9CA3AF',
+              padding: '5px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            {isExpanded ? <Minimize2 size={20} /> : <Maximize2 size={18} />}
+          </button>
+        </div>
+      </div>
+      
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', justifyContent: 'center', marginTop: '10px' }}>
         <input type="checkbox" id="confirm" required style={{ width: '16px', height: '16px' }} />
         <label htmlFor="confirm" style={{ fontSize: '12px', color: '#9CA3AF', cursor: 'pointer' }}>
           入力内容に間違いがないか確認しました

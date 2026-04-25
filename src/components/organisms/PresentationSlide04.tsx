@@ -21,8 +21,8 @@ export const PresentationSlide04: React.FC<PresentationSlide04Props> = ({ data }
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0, filter: "grayscale(1)" }}
-      className="absolute inset-0 bg-white flex flex-col p-12 md:p-16 gap-8 overflow-hidden"
-    >
+      className="absolute inset-0 bg-white flex flex-col p-8 md:p-12 gap-6 overflow-y-auto"
+    >
       {/* 背景演出：断線した回路と社外秘スタンプ */}
       <div className="absolute inset-0 opacity-[0.08] pointer-events-none">
         <svg width="100%" height="100%" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -47,17 +47,17 @@ export const PresentationSlide04: React.FC<PresentationSlide04Props> = ({ data }
         >
           あなたの物語は、今この瞬間も止まっていませんか？
         </motion.span>
-        <h2 className="text-4xl md:text-5xl font-black text-slate-900 leading-tight mb-6">
-          {data.title}
-        </h2>
-        <p className="text-slate-600 text-lg font-bold max-w-3xl leading-relaxed">
-          {data.description}
-        </p>
+        <h2 className="text-3xl md:text-4xl font-black text-slate-900 leading-tight mb-4">
+          {data.title}
+        </h2>
+        <p className="text-slate-600 text-base md:text-lg font-bold max-w-3xl leading-relaxed">
+          {data.description}
+        </p>
       </div>
 
       {/* 中央：停滞バー (Stagnation Bar) */}
-      <div className="relative z-10 w-full py-8">
-        <div className="w-full h-12 bg-rose-50 rounded-full border border-rose-100 overflow-hidden relative">
+      <div className="relative z-10 w-full py-4">
+        <div className="w-full h-10 bg-rose-50 rounded-full border border-rose-100 overflow-hidden relative">
           <motion.div 
             initial={{ width: "0%" }}
             animate={{ width: "65%" }}
@@ -86,18 +86,18 @@ export const PresentationSlide04: React.FC<PresentationSlide04Props> = ({ data }
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1 + idx * 0.2 }}
-            className="bg-rose-50/80 backdrop-blur-md border border-rose-100 p-6 rounded-2xl shadow-xl flex flex-col gap-4 group hover:bg-rose-500 transition-colors duration-300"
-          >
-            <div className="flex items-center justify-between">
-              <span className="text-rose-500 font-black text-sm group-hover:text-white">ERROR_{pain.id}</span>
-              <ShieldAlert className="text-rose-500 group-hover:text-white group-hover:rotate-12 transition-transform" size={20} />
-            </div>
-            <div>
-              <h3 className="text-xl font-black text-slate-900 group-hover:text-white mb-2">{pain.title}</h3>
-              <p className="text-sm font-bold text-slate-600 group-hover:text-white/90 leading-relaxed">
-                {pain.desc}
-              </p>
-            </div>
+            className="bg-rose-50/80 backdrop-blur-md border border-rose-100 p-5 rounded-2xl shadow-xl flex flex-col gap-3 group hover:bg-rose-500 transition-colors duration-300"
+          >
+            <div className="flex items-center justify-between">
+              <span className="text-rose-500 font-black text-xs group-hover:text-white">ERROR_{pain.id}</span>
+              <ShieldAlert className="text-rose-500 group-hover:text-white group-hover:rotate-12 transition-transform" size={18} />
+            </div>
+            <div>
+              <h3 className="text-lg font-black text-slate-900 group-hover:text-white mb-1">{pain.title}</h3>
+              <p className="text-xs font-bold text-slate-600 group-hover:text-white/90 leading-relaxed">
+                {pain.desc}
+              </p>
+            </div>
           </motion.div>
         ))}
       </div>

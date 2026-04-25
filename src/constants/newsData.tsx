@@ -27,6 +27,14 @@ export interface NewsItem {
  */
 export const newsItems: NewsItem[] = [
   {
+    date: '2026.04.24',
+    category: '営業日',
+    title: '【お知らせ】2026年ゴールデンウィーク休業期間中の営業について',
+    description: '2026年5月4日（月）〜5月8日（金）の期間を休業とさせていただきます。期間中のお電話・メール対応の詳細についてご案内いたします。',
+    icon: <Sparkles size={24} style={{ color: '#F6AD55' }} />,
+    url: '/news/20260424-gw-notice'
+  },
+  {
     date: '2026.04.16',
     category: 'ニュース',
     title: '【新機能】Meeceの情報をワンビューで集約・閲覧できる「Presentation Room」を公開いたしました',
