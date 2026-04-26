@@ -36,9 +36,9 @@ export const PresentationRoom: React.FC = () => {
       theme: "light",
       info: [
           { label: "商号", value: "Meece株式会社", sub: "ミースカブシキガイシャ" },
-          { label: "代表取締役", value: "溝口 雅登" },
-          { label: "設立", value: "2024年 1月 5日" },
-          { label: "資本金", value: "1,000,000円" },
+          { label: "代表取締役", value: "溝口 雅登" },
+          { label: "設立", value: "2022年 8月 22日" },
+          { label: "資本金", value: "1,000,000円" },
           { label: "取引銀行", value: "みずほ銀行", sub: "八重洲口支店" },
           { label: "所在地", value: "〒100-0005\n東京都千代田区丸の内1-8-3\n丸の内トラストタワー本館 20階" },
           { label: "連絡先", value: "Meece 事務局", phone: "03-5288-5125", email: "info@meece.io" },

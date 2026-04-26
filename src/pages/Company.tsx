@@ -85,7 +85,7 @@ export const Company: React.FC = () => {
                 { label: '商号', value: 'Meece株式会社', sub: 'ミースカブシキガイシャ', icon: <Award size={20} color="#00FBFF" /> },
                 { label: '会社住所', value: '〒100-0005\n東京都千代田区丸の内1丁目8-3\n丸の内トラストタワー本館 20階', icon: <MapPin size={20} color="#00FBFF" /> },
                 { label: '代表取締役社長', value: '溝口 雅登', icon: <User size={20} color="#00FBFF" /> },
-                { label: '会社設立日', value: '2024年 1月 5日', icon: <Calendar size={20} color="#00FBFF" /> },
+                { label: '会社設立日', value: '2022年 8月 22日', icon: <Calendar size={20} color="#00FBFF" /> },
                 { label: '資本金', value: '1,000,000円', icon: <CircleDollarSign size={20} color="#00FBFF" /> },
                 { label: '取引先銀行', value: 'みずほ銀行', sub: '八重洲口支店', icon: <Landmark size={20} color="#00FBFF" /> },
                 { label: 'お問い合わせ先', value: '03-5288-5125', icon: <Mail size={20} color="#00FBFF" /> },
@@ -148,7 +148,7 @@ export const Company: React.FC = () => {
               }}></div>
 
               {[
-                { year: '2022', title: '創業、SES事業の開始', desc: 'Meece株式会社設立。高度な技術力を市場へ提供するSES事業を柱として、物語の一歩を踏み出しました。', side: 'right' },
+                { year: '2022', title: 'Meece株式会社 設立', desc: '高度な技術力を市場へ提供するSES事業を柱として、物語の一歩を踏み出しました。', side: 'right' },
                 { year: '2023', title: '受託開発・コンサル事業の拡大', desc: '戦略の策定から実装までを一気通貫で支援する体制を構築。数々の企業の課題を「物語」として完結させ始めました。', side: 'left' },
                 { year: '2024', title: 'AI研究開発部門の立ち上げ', desc: '最先端の生成AI・LLM技術をビジネスに実装する専門チームを発足。技術革新の最前線へ進出。', side: 'right' },
                 { year: '2026', title: '自社プロダクト、始動。', desc: 'これまで培った全ての技術と想いを結集させた、全く新しい物語が始まります。近日公開予定...', side: 'left', special: true },
