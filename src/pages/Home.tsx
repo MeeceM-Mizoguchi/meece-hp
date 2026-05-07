@@ -5,13 +5,33 @@ import { Footer } from '../components/organisms/Footer';
 import { ContactForm } from '../components/organisms/ContactForm';
 import gsap from 'gsap';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Code2, BrainCircuit, Compass, Rocket, Zap, Sparkles, CheckCircle2 } from 'lucide-react';
+import { Code2, BrainCircuit, Compass, Rocket, Zap, Sparkles } from 'lucide-react';
 import { newsItems } from '../constants/newsData'; // ニュースデータ台帳をインポート
 
 function Home() {
   const [windowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
-  const [isRocketsignaled, setIsRocketsignaled] = useState(false); // ロケット射出遷移のステート
   const [isOpeningComplete, setIsOpeningComplete] = useState(false); // オープニング完了フラグ
+
+  // --- スクロール禁止・解除の制御 ---
+  useEffect(() => {
+    if (!isOpeningComplete) {
+      // オープニング中はスクロールを禁止し、TOPに固定する
+      window.scrollTo(0, 0);
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
+      document.body.style.height = '100%';
+    } else {
+      // オープニング完了後は全ての制限を解除
+      document.documentElement.style.overflow = 'unset';
+      document.body.style.overflow = 'unset';
+      document.body.style.height = 'unset';
+    }
+    return () => {
+      document.documentElement.style.overflow = 'unset';
+      document.body.style.overflow = 'unset';
+      document.body.style.height = 'unset';
+    };
+  }, [isOpeningComplete]);
 
   // 背景画像スライド用の設定
   const backgroundImages = [
@@ -67,13 +87,26 @@ function Home() {
       .to(".opening-overlay", { 
         opacity: 0, 
         duration: 1, 
-        ease: "power2.inOut" 
+        ease: "power2.inOut",
+        onComplete: () => {
+          // アニメーション終了後に要素を完全に消去する
+          gsap.set(".opening-overlay", { display: "none" });
+        }
       }, "+=0.2");
 
     // 2. メインコンテンツの登場（全体の尺に合わせて調整）
-    gsap.fromTo(".hero-content", 
-      { opacity: 0, y: 30 },
-      { opacity: 1, y: 0, duration: 1.5, stagger: 0.3, ease: "power3.out", delay: 4.8 }
+    // Skipボタンと競合しないよう、初期状態をセットした上で .to で動かします
+    gsap.set(".hero-content", { opacity: 0, y: 30 });
+    gsap.to(".hero-content", 
+      { 
+        opacity: 1, 
+        y: 0, 
+        duration: 1.5, 
+        stagger: 0.3, 
+        ease: "power3.out", 
+        delay: 4.8,
+        id: "heroAnim" // 特定して停止できるようにIDを付与
+      }
     );
 
     return () => {
@@ -90,17 +123,66 @@ function Home() {
         {!isOpeningComplete && (
           <div className="opening-overlay" style={{
             position: 'fixed',
-            inset: 0,
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
             zIndex: 9999,
             backgroundColor: '#FFFFFF',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            pointerEvents: 'none',
-            overflow: 'hidden'
+            pointerEvents: 'all',
+            overflow: 'hidden',
+            touchAction: 'none'
           }}>
-            
-            {/* 背景の装飾：浮遊する幾何学パーツ（イラスト要素） */}
+            
+            {/* スキップボタン */}
+            <button
+              onClick={() => {
+                // すべてのアニメーションを即座に停止
+                gsap.killTweensOf(".opening-logo, .opening-icon, .opening-bg-shape, .opening-overlay-content, .opening-overlay, .hero-content");
+                // ID指定でヒーローアニメーションも確実に停止
+                const heroAnim = gsap.getById("heroAnim");
+                if (heroAnim) heroAnim.kill();
+
+                setIsOpeningComplete(true);
+                // 確実に表示状態をセット
+                gsap.set(".hero-content", { opacity: 1, y: 0, visibility: "visible" });
+              }}
+              style={{
+                position: 'absolute',
+                top: '30px',
+                right: '30px',
+                zIndex: 10000,
+                backgroundColor: '#0D1B3E',
+                border: 'none',
+                color: '#FFFFFF',
+                padding: '10px 24px',
+                borderRadius: '100px',
+               fontSize: '13px',
+                fontWeight: 900,
+                letterSpacing: '0.2em',
+                cursor: 'pointer',
+                transition: 'all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1)',
+                pointerEvents: 'all',
+                boxShadow: '0 4px 12px rgba(13, 27, 62, 0.2)'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#1A2B5A';
+                e.currentTarget.style.transform = 'scale(1.05)';
+                e.currentTarget.style.boxShadow = '0 6px 16px rgba(13, 27, 62, 0.3)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = '#0D1B3E';
+                e.currentTarget.style.transform = 'scale(1)';
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(13, 27, 62, 0.2)';
+              }}
+            >
+              SKIP
+            </button>
+
+            {/* 背景の装飾：浮遊する幾何学パーツ（イラスト要素） */}
             <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
               {[...Array(12)].map((_, i) => (
                 <div key={i} className="opening-bg-shape" style={{
@@ -175,19 +257,25 @@ function Home() {
 
       <Navbar />
       
-      <main style={{ position: 'relative', width: '100%' }}>
+      <main style={{ 
+        position: 'relative', 
+        width: '100%', 
+        opacity: isOpeningComplete ? 1 : 0,
+        transition: 'opacity 0.8s ease-in-out',
+        zIndex: isOpeningComplete ? 1 : -1
+      }}>
         {/* ヒーローセクション（1枚目：シネマティック・X・レイアウト） */}
         <section style={{ position: 'relative', width: '100%', height: '100vh', overflow: 'hidden', backgroundColor: '#000814' }}>
           {/* 1. 背景：5秒おきに切り替わる都市景色 */}
-          <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
-            <AnimatePresence mode="wait">
+          <div style={{ position: 'absolute', inset: 0, zIndex: 0, backgroundColor: '#000' }}>
+            <AnimatePresence mode="popLayout">
               <motion.img
                 key={backgroundImages[bgIndex]}
                 src={backgroundImages[bgIndex]}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 1.5, ease: "easeInOut" }}
+                transition={{ duration: 2.0, ease: "easeInOut" }}
                 alt="City Background"
                 style={{ 
                   position: 'absolute',
@@ -215,7 +303,7 @@ function Home() {
 
           {/* 3. コンテンツレイヤー */}
           <div style={{ position: 'relative', zIndex: 10, height: '100%', width: '100%', boxSizing: 'border-box' }}>
-            <div className="hero-content" style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: windowWidth < 768 ? '100px 20px 60px' : '80px 100px' }}>
+            <div className="hero-content" style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: windowWidth < 768 ? '100px 20px 60px' : '80px 100px', opacity: isOpeningComplete ? 1 : 0 }}>
               
               {/* TOP: スローガン（スマホ時は位置を右端に寄せる） */}
               <div style={{ display: 'flex', justifyContent: 'flex-end', position: windowWidth < 768 ? 'absolute' : 'relative', right: windowWidth < 768 ? '20px' : 'auto', top: windowWidth < 768 ? '100px' : 'auto' }}>
@@ -263,216 +351,112 @@ function Home() {
           </div>
         </section>
 
-        {/* 派手な広告セクション：ビビッドアニメーション & ハイコントラスト版 */}
-        <section style={{ 
-          width: '100%', 
-          backgroundColor: '#FFFFFF', 
-          padding: windowWidth < 768 ? '30px 0' : '60px 0',
-          position: 'relative',
-          overflow: 'hidden'
-        }}>
-          {/* 背景：画面全体でうごめくオーロラエフェクト */}
-          <motion.div 
-            animate={{ 
-              scale: [1, 1.1, 1],
-              rotate: [0, 5, -5, 0]
-            }}
-            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-            style={{ 
-              position: 'absolute', top: '-10%', left: '-5%', width: '110%', height: '120%', 
-              background: 'radial-gradient(circle at 80% 20%, rgba(157, 114, 255, 0.08) 0%, transparent 40%), radial-gradient(circle at 20% 80%, rgba(0, 251, 255, 0.08) 0%, transparent 40%)',
-              filter: 'blur(100px)', zIndex: 0 
-            }} 
-          />
+        {/* デジタル・クリエイティブ・ファーム紹介セクション */}
+        <section style={{ 
+          width: '100%', 
+          backgroundColor: '#FFFFFF', 
+          padding: windowWidth < 768 ? '100px 0' : '160px 0',
+          position: 'relative',
+          overflow: 'hidden'
+        }}>
+          <div style={{ maxWidth: '1300px', margin: '0 auto', padding: '0 40px' }}>
+            <div style={{ display: 'flex', flexDirection: windowWidth < 1024 ? 'column' : 'row', gap: '60px', alignItems: 'flex-start' }}>
+              
+              {/* 左側：コンセプトタイトル */}
+              <div style={{ flex: '1' }}>
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8 }}
+                  viewport={{ once: true }}
+                >
+                  <p style={{ color: '#94A3B8', fontSize: '14px', fontWeight: 800, letterSpacing: '0.4em', marginBottom: '24px' }}>
+                    WHO WE ARE
+                  </p>
+                  <h2 style={{ 
+                    color: '#0D1B3E', 
+                    fontSize: 'clamp(32px, 5vw, 56px)', 
+                    fontWeight: 900, 
+                    lineHeight: 1.1,
+                    letterSpacing: '-0.02em',
+                    marginBottom: '40px'
+                  }}>
+                    テクノロジーと表現で、<br />
+                    <span style={{ color: '#94A3B8' }}>価値を再定義する。</span>
+                  </h2>
+                  <p style={{ color: '#475569', fontSize: '16px', lineHeight: 2, maxWidth: '500px' }}>
+                    MEECEは、戦略的なビジネス設計、最新鋭のテクノロジー実装、そして心を動かすクリエイティブ表現を高度に融合させたデジタル・クリエイティブ・ファームです。単なる「開発」に留まらず、プロダクトが描くべき物語そのものをデザインします。
+                  </p>
+                </motion.div>
+              </div>
 
-          <div style={{ maxWidth: '1140px', margin: '0 auto', padding: '0 20px', position: 'relative', zIndex: 1 }}>
-            <motion.div 
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, type: "spring" }}
-              viewport={{ once: true }}
-              style={{
-                backgroundColor: '#FFFFFF',
-                borderRadius: windowWidth < 768 ? '32px' : '56px',
-                padding: windowWidth < 768 ? '48px 20px' : '70px 50px',
-                textAlign: 'center',
-                position: 'relative',
-                overflow: 'hidden',
-                boxShadow: '0 50px 100px -20px rgba(0, 0, 0, 0.12), 0 30px 60px -30px rgba(0, 122, 255, 0.2)',
-                border: '1px solid #F1F5F9'
-              }}
-            >
-              {/* 装飾：背面を高速で横切るレーザー光線 */}
-              {[...Array(3)].map((_, i) => (
-                <motion.div
-                  key={i}
-                  animate={{ x: ['-200%', '200%'] }}
-                  transition={{ duration: 2.5, repeat: Infinity, delay: i * 0.8, ease: "linear" }}
-                  style={{
-                    position: 'absolute', top: `${30 + i * 20}%`, left: 0, width: '40%', height: '1px',
-                    background: 'linear-gradient(90deg, transparent, #9D72FF, #00FBFF, transparent)',
-                    opacity: 0.4, zIndex: 0
-                  }}
-                />
-              ))}
+              {/* 右側：3つの柱（グリッドレイアウト） */}
+              <div style={{ flex: '1.2', width: '100%' }}>
+                <div style={{ 
+                  display: 'grid', 
+                  gridTemplateColumns: windowWidth < 640 ? '1fr' : 'repeat(2, 1fr)', 
+                  gap: '24px' 
+                }}>
+                  {[
+                    {
+                      icon: <Sparkles size={24} />,
+                      title: 'Experience Design',
+                      desc: 'ユーザーの行動心理に基づき、直感的で美しいインターフェースと体験を構築します。'
+                    },
+                    {
+                      icon: <Code2 size={24} />,
+                      title: 'Deep Technology',
+                      desc: 'AI、モダンなWebスタックを駆使し、拡張性と堅牢性を兼ね備えたシステムを実現。'
+                    },
+                    {
+                      icon: <BrainCircuit size={24} />,
+                      title: 'Business Strategy',
+                      desc: '市場環境を分析し、デジタルを活用した持続可能なビジネスモデルを策定します。'
+                    },
+                    {
+                      icon: <Compass size={24} />,
+                      title: 'Creative Direction',
+                      desc: 'ブランドの意志を視覚化し、一貫したメッセージを世の中に届けます。'
+                    }
+                  ].map((item, idx) => (
+                    <motion.div
+                      key={idx}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                     transition={{ duration: 0.5, delay: idx * 0.1 }}
+                      viewport={{ once: true }}
+                      style={{ 
+                        padding: '32px', 
+                        border: '1px solid #F1F5F9', 
+                        borderRadius: '24px',
+                        backgroundColor: '#F8FAFC'
+                      }}
+                    >
+                      <div style={{ color: '#0D1B3E', marginBottom: '20px' }}>{item.icon}</div>
+                      <h3 style={{ fontSize: '18px', fontWeight: 900, color: '#0D1B3E', marginBottom: '12px' }}>{item.title}</h3>
+                      <p style={{ fontSize: '14px', color: '#64748B', lineHeight: 1.6 }}>{item.desc}</p>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
 
-              <div style={{ position: 'relative', zIndex: 1 }}>
-                {/* ネオン発光バッジ */}
-                <motion.div 
-                  animate={{ 
-                    boxShadow: ['0 0 0px rgba(0,251,255,0)', '0 0 20px rgba(0,251,255,0.4)', '0 0 0px rgba(0,251,255,0)']
-                  }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                  style={{ 
-                    display: 'inline-flex', alignItems: 'center', gap: '10px', 
-                    background: '#0D1B3E',
-                    padding: '10px 24px', borderRadius: '100px', marginBottom: '32px',
-                    border: '1px solid rgba(0, 251, 255, 0.3)'
-                  }}
-                >
-                  <motion.div
-                    animate={{ rotate: [0, 360] }}
-                    transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-                  >
-                    <Zap size={16} color="#00FBFF" fill="#00FBFF" />
-                  </motion.div>
-                  <span style={{ fontSize: '12px', fontWeight: 900, color: '#FFFFFF', letterSpacing: '0.3em' }}>PREMIUM SOLUTION</span>
-                </motion.div>
-
-                {/* 激しい色のタイトル：視認性重視のディープカラー */}
-                <h2 style={{ 
-                  fontSize: 'clamp(32px, 6vw, 76px)', fontWeight: 950, color: '#0D1B3E', 
-                  lineHeight: 1.0, letterSpacing: '-0.06em', marginBottom: '36px'
-                }}>
-                  昨日思いついた企画、<br />
-                  <motion.span 
-                    animate={{ 
-                      backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
-                      textShadow: ['0 0 0px rgba(157,114,255,0)', '0 0 30px rgba(157,114,255,0.3)', '0 0 0px rgba(157,114,255,0)']
-                    }}
-                    transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-                    style={{ 
-                      background: 'linear-gradient(90deg, #0056FF, #9D72FF, #FF0080, #0056FF)',
-                      backgroundSize: '300% auto',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      display: 'inline-block',
-                      padding: '10px 0'
-                    }}
-                  >
-                    明日、動かしましょう。
-                  </motion.span>
-                </h2>
-
-                <p style={{ 
-                  fontSize: 'clamp(16px, 2vw, 22px)', color: '#475569', 
-                  lineHeight: 1.6, maxWidth: '700px', margin: '0 auto 56px', fontWeight: 800
-                }}>
-                  AI駆動の超高速開発アセットが、<br className="hidden md:block" />
-                  あなたの構想を「24時間以内」に実働プロトタイプへ。
-                </p>
-
-                {/* 巨大なアクションボタン：ホバーで回転、クリックでロケット射出遷移 */}
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '32px' }}>
-                  <motion.button 
-                    onClick={() => {
-                      // 1. ロケット射出ステートをONにする
-                      setIsRocketsignaled(true); 
-                    }}
-                    whileHover="hover" // PC用：ホバー時に子要素の"hover"アニメーションを発動
-                    whileTap="tap"    // モバイル用：タップ時に子要素の"tap"アニメーションを発動
-                    animate={{ y: [0, -5, 0] }}
-                    transition={{ 
-                      y: { duration: 3, repeat: Infinity, ease: "easeInOut" }
-                    }}
-                    style={{ 
-                      background: 'linear-gradient(135deg, #0D1B3E 0%, #1E293B 100%)',
-                      color: '#FFFFFF', padding: windowWidth < 768 ? '18px 40px' : '24px 70px', 
-                      borderRadius: '20px', fontSize: windowWidth < 768 ? '16px' : '22px', 
-                      fontWeight: 900, textDecoration: 'none',
-                      display: 'flex', alignItems: 'center', gap: '16px', transition: 'all 0.3s ease',
-                      boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.4)',
-                      border: 'none', cursor: 'pointer', fontFamily: 'inherit'
-                    }}
-                  >
-                    爆速POC特設サイトを見る
-                    
-                    {/* ロケットアイコンのコンテナ：AnimatePresenceで消滅アニメーションを管理 */}
-                    <div style={{ width: '24px', height: '24px', position: 'relative' }}>
-                      <AnimatePresence 
-                        onExitComplete={() => {
-                          // 3. ロケットが画面外に消えた後に、ページを遷移させる
-                          window.location.href = "/services/rapid-poc";
-                        }}
-                      >
-                        {!isRocketsignaled && (
-                          <motion.div
-                            key="rocket-icon"
-                            initial={{ rotate: 0, x: 0, opacity: 1 }}
-                            variants={{
-                              hover: { 
-                                rotate: 45, 
-                                transition: { duration: 0.2, ease: "easeInOut" } 
-                              },
-                              tap: {
-                                rotate: 45, // タップした瞬間も右を向かせる
-                                transition: { duration: 0.1 }
-                              }
-                            }}
-                            exit={{ 
-                              // モバイルで「横を向いてから消える」を強調するため、
-                              // exit時に回転(rotate)も含めて一気にアニメーションさせます
-                              rotate: 45,
-                              x: windowWidth < 768 ? 150 : 300, 
-                              opacity: 0, 
-                              scale: 1.2,
-                              transition: { duration: 0.3, ease: "circIn" } 
-                            }}
-                            style={{ display: 'flex', position: 'absolute', inset: 0 }}
-                          >
-                            <Rocket size={24} color="#00FBFF" />
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </div>
-                  </motion.button>
-                  
-                  {/* 横並びの派手なタグ：コントラスト強化 */}
-                  <div style={{ 
-                    display: 'flex', alignItems: 'center', gap: '20px',
-                    color: '#0D1B3E', fontSize: '13px', fontWeight: 900
-                  }}>
-                    <motion.div 
-                      whileHover={{ scale: 1.1, rotate: 2 }}
-                      style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#F0FDFF', padding: '8px 16px', borderRadius: '12px', border: '2px solid #00FBFF' }}
-                    >
-                      <Sparkles size={16} color="#007AFF" />
-                      <span>最短24時間</span>
-                    </motion.div>
-                    <motion.div 
-                      whileHover={{ scale: 1.1, rotate: -2 }}
-                      style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#FFF1F2', padding: '8px 16px', borderRadius: '12px', border: '2px solid #FF0080' }}
-                    >
-                      <CheckCircle2 size={16} color="#FF0080" />
-                      <span>低コスト検証</span>
-                    </motion.div>
-                  </div>
-                </div>
-              </div>
-
-              {/* 背景の巨大透過文字：プロ感を出すためのタイポグラフィ装飾 */}
-              <div style={{ 
-                position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-                fontSize: 'clamp(150px, 30vw, 400px)', fontWeight: 950, 
-                color: 'rgba(0, 122, 255, 0.03)', 
-                zIndex: 0, pointerEvents: 'none', userSelect: 'none', fontStyle: 'italic',
-                whiteSpace: 'nowrap'
-              }}>
-                RAPID
-              </div>
-            </motion.div>
-          </div>
-        </section>
+          {/* 装飾：背景の巨大なタイポグラフィ */}
+          <div style={{ 
+            position: 'absolute', 
+            bottom: '-5%', 
+            right: '-2%', 
+            fontSize: 'clamp(100px, 15vw, 200px)', 
+            fontWeight: 950, 
+            color: 'rgba(13, 27, 62, 0.02)', 
+            zIndex: 0,
+            pointerEvents: 'none',
+            userSelect: 'none'
+          }}>
+            CREATIVE
+          </div>
+        </section>
 
         {/* 2枚目：ORIGIN OF MEECE セクション（背景に淡いグラデーションを追加） */}
         <section style={{ 

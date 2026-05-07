@@ -27,6 +27,14 @@ export interface NewsItem {
  */
 export const newsItems: NewsItem[] = [
   {
+    date: '2026.05.07',
+    category: 'ニュース',
+    title: '【ビジョン】時代をまたぎ、デジタル・クリエイティブ・ファームへ。',
+    description: 'AIという革新と、日本が築いた資産。その両方を等しく尊び、デザインの力で次世代へ繋ぐ。Meeceは、新しい時代のデジタルを形にするファームとして歩み始めます。',
+    icon: <Sparkles size={24} style={{ color: '#9870FF' }} />,
+    url: '/news/20260507-digital-creative-firm'
+  },
+  {
     date: '2026.04.24',
     category: '営業日',
     title: '【お知らせ】2026年ゴールデンウィーク休業期間中の営業について',

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, ChevronRight, Sparkles } from 'lucide-react';
+import { ChevronRight, Sparkles } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
   // isScrolled を削除し、isMenuOpen だけ残します
@@ -78,8 +78,8 @@ export const Navbar: React.FC = () => {
         WebkitBackdropFilter: 'blur(12px)',
         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
         borderBottom: '1px solid rgba(243, 244, 246, 0.6)',
-        paddingTop: '15px',
-        paddingBottom: '15px'
+        paddingTop: '10px',
+        paddingBottom: '10px'
       }}
     >
       <div className="max-w-360 mx-auto px-10 flex items-center justify-between">
@@ -126,7 +126,7 @@ export const Navbar: React.FC = () => {
             <div key={link.name} className="relative group flex items-center h-full py-4">
               <a 
                 href={link.href} 
-                className="text-[13px] font-bold tracking-[0.15em] transition-colors whitespace-nowrap"
+                className="text-[13px] font-normal tracking-[0.15em] transition-colors whitespace-nowrap"
                 style={{ color: '#0D1B3E' }}
                 onMouseEnter={(e) => e.currentTarget.style.color = '#3182CE'}
                 onMouseLeave={(e) => e.currentTarget.style.color = '#0D1B3E'}
@@ -216,39 +216,50 @@ export const Navbar: React.FC = () => {
             </div>
           ))}
           <div className="flex items-center gap-4 ml-4 shrink-0">
-            {/* ABOUT US ボタン (PresentationRoomへのリンク) */}
-            <a 
-              href="/presentation" 
-              className="px-6 py-2.5 rounded-full text-[12px] font-bold transition-all flex items-center gap-2 tracking-widest uppercase bg-linear-to-r from-meece-blue to-meece-purple text-white hover:shadow-lg hover:scale-105 active:scale-95"
-            >
-              <Sparkles size={14} /> ABOUT US
-            </a>
+            {/* ABOUT US ボタン (PresentationRoomへのリンク) */}
+            <a 
+              href="/presentation" 
+              className="px-6 py-2.5 rounded-full text-[12px] font-medium transition-all flex items-center gap-2 tracking-widest uppercase bg-linear-to-r from-meece-blue to-meece-purple text-white hover:shadow-lg hover:scale-105 active:scale-95"
+            >
+              <Sparkles size={14} /> ABOUT US
+            </a>
 
-            <a href="/estimate" className="px-6 py-2.5 rounded-full text-[12px] font-bold transition-all flex items-center gap-2 tracking-widest uppercase bg-[#0D1B3E] text-white hover:bg-[#3182CE]">
-              ESTIMATE <ChevronRight size={12} />
-            </a>
-            <a 
-              href="/#contact" 
-              className="px-6 py-2.5 rounded-full text-[12px] font-bold border transition-all flex items-center gap-2 tracking-widest uppercase"
-              style={{
-                backgroundColor: 'transparent',
-                color: '#0D1B3E',
-                borderColor: '#0D1B3E'
-              }}
-            >
-              CONTACT <ChevronRight size={12} />
-            </a>
-          </div>
+            <a href="/estimate" className="px-6 py-2.5 rounded-full text-[12px] font-medium transition-all flex items-center gap-2 tracking-widest uppercase bg-[#0D1B3E] text-white hover:bg-[#3182CE]">
+              ESTIMATE <ChevronRight size={12} />
+            </a>
+            <a 
+              href="/#contact" 
+              className="px-6 py-2.5 rounded-full text-[12px] font-medium border transition-all flex items-center gap-2 tracking-widest uppercase"
+              style={{
+                backgroundColor: 'transparent',
+                color: '#0D1B3E',
+                borderColor: '#0D1B3E'
+              }}
+            >
+              CONTACT <ChevronRight size={12} />
+            </a>
+          </div>
         </div>
 
        {/* モバイルボタン：白背景でも見えるよう、常に濃い色に固定します */}
         <button 
-          className="xl:hidden transition-colors" 
-          style={{ color: '#0D1B3E' }}
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-        >
-          {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
-        </button>
+          className="xl:hidden transition-colors relative w-8 h-8 flex items-center justify-center" 
+          style={{ color: '#0D1B3E' }}
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+        >
+          {isMenuOpen ? (
+            <div className="relative w-6 h-6 flex items-center justify-center">
+              <div className="absolute w-full h-px bg-[#0D1B3E] rotate-45"></div>
+              <div className="absolute w-full h-px bg-[#0D1B3E] -rotate-45"></div>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-1.75 w-6 items-end">
+              <div className="w-full h-px bg-[#0D1B3E]"></div>
+              <div className="w-full h-px bg-[#0D1B3E]"></div>
+              <div className="w-full h-px bg-[#0D1B3E]"></div>
+            </div>
+          )}
+        </button>
       </div>
 
       {/* モバイルメニュー */}
@@ -256,8 +267,8 @@ export const Navbar: React.FC = () => {
         <div 
           className="xl:hidden fixed left-0 w-full p-8 flex flex-col items-start shadow-2xl overflow-y-auto"
           style={{ 
-            top: '88px',
-            height: 'calc(100vh - 88px)',
+            top: '78px',
+            height: 'calc(100vh - 78px)',
             backgroundColor: '#FFFFFF',
             borderTop: '1px solid #F3F4F6',
             boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.1)',
