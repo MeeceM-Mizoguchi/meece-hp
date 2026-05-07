@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 // Navbarは1つ上の階層(..)のcomponentsの中にあるので、パスを修正しました
 import { Navbar } from '../components/organisms/Navbar';
 import { Footer } from '../components/organisms/Footer';
@@ -9,121 +9,259 @@ import { Code2, BrainCircuit, Compass, Rocket, Zap, Sparkles, CheckCircle2 } fro
 import { newsItems } from '../constants/newsData'; // ニュースデータ台帳をインポート
 
 function Home() {
-  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
-  const [isRocketsignaled, setIsRocketsignaled] = useState(false); // ロケット射出遷移のステート
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const [windowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
+  const [isRocketsignaled, setIsRocketsignaled] = useState(false); // ロケット射出遷移のステート
+  const [isOpeningComplete, setIsOpeningComplete] = useState(false); // オープニング完了フラグ
 
-  useEffect(() => {
-    const handleResize = () => setWindowWidth(window.innerWidth);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  // 背景画像スライド用の設定
+  const backgroundImages = [
+    "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?q=80&w=2044&auto=format&fit=crop", // 現在の都市
+    "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?q=80&w=2040&auto=format&fit=crop", // 別の都市
+    "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?q=80&w=2040&auto=format&fit=crop", // ニューヨーク
+    "https://images.unsplash.com/photo-1514565131-fce0801e5785?q=80&w=2112&auto=format&fit=crop"  // 近未来的な都市
+  ];
+  const [bgIndex, setBgIndex] = useState(0);
 
-  useEffect(() => {
-    // 公式サイトのような登場アニメーション
-    gsap.fromTo(".hero-content", 
-      { opacity: 0, y: 30 },
-      { opacity: 1, y: 0, duration: 1.2, stagger: 0.2, ease: "power3.out", delay: 0.5 }
-    );
-  }, []);
+  useEffect(() => {
+    let bgTimer: any;
+
+    // 1. オープニング演出：White Storyboard
+    const tl = gsap.timeline({
+      onComplete: () => {
+        setIsOpeningComplete(true);
+        // オープニング完了後、はじめて5秒タイマーをスタートさせる
+        bgTimer = setInterval(() => {
+          setBgIndex((prev) => (prev + 1) % backgroundImages.length);
+        }, 10000);
+      }
+    });
+
+    tl.set(".opening-logo", { opacity: 0, y: 20, letterSpacing: "1.2em" })
+      .set(".opening-icon", { opacity: 0, scale: 0, y: 30 })
+      .set(".opening-bg-shape", { opacity: 0 })
+      
+      // Step 1: クリアなロゴが静かに浮上
+      .to(".opening-logo", { opacity: 1, y: 0, duration: 1.2, ease: "power3.out" })
+      
+      // Step 2: 背景に薄い幾何学模様（イラスト的要素）が散りばめられる
+      .to(".opening-bg-shape", { opacity: 0.1, duration: 1, stagger: 0.05, ease: "power2.out" }, "-=0.5")
+      
+      // Step 3: 周囲に事業ドメインアイコンが華やかに現れる
+      .to(".opening-icon", { 
+        opacity: 1, 
+        scale: 1, 
+        y: 0, 
+        duration: 0.8, 
+        stagger: { amount: 0.6, from: "center" }, 
+        ease: "back.out(1.7)" 
+      }, "-=0.8")
+      
+      // Step 4: 全体がゆっくりと浮遊し、期待感を高める
+      .to(".opening-overlay-content", {
+        y: -20,
+        duration: 2,
+        ease: "sine.inOut"
+      })
+      
+      // Step 5: 収束し、メインビジュアルへ
+      .to(".opening-overlay", { 
+        opacity: 0, 
+        duration: 1, 
+        ease: "power2.inOut" 
+      }, "+=0.2");
+
+    // 2. メインコンテンツの登場（全体の尺に合わせて調整）
+    gsap.fromTo(".hero-content", 
+      { opacity: 0, y: 30 },
+      { opacity: 1, y: 0, duration: 1.5, stagger: 0.3, ease: "power3.out", delay: 4.8 }
+    );
+
+    return () => {
+      if (bgTimer) clearInterval(bgTimer); // タイマーが動いていれば止める
+    };
+  }, []);
 
   // 動画の自動ループ再生はHTMLの属性で行うため、このブロックは削除しました
 
   return (
-    <div style={{ backgroundColor: 'black', minHeight: '100vh', width: '100%', margin: 0, padding: 0, overflowX: 'hidden' }}>
-      <Navbar />
-      
-      <main style={{ position: 'relative', width: '100%' }}>
-        {/* ヒーローセクション（1枚目：動画背景エリア） */}
-        <section style={{ position: 'relative', width: '100%', height: '100vh', overflow: 'hidden' }}>
-          {/* 背景動画：プロジェクト内の main.mp4 を再生 */}
-        <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0, overflow: 'hidden' }}>
-          <video
-            ref={videoRef}
-            src="/main.mp4"
-            autoPlay
-            loop
-            muted
-            playsInline
-            style={{
-              width: '100%', 
-              height: '100%', 
-              objectFit: 'cover',
-              position: 'absolute',
-              top: '50%', 
-              left: '50%', 
-              transform: 'translate(-50%, -50%)', 
-              opacity: 0.7 
-            }}
-          />
-          {/* 動画の上に重ねるグラデーション（文字を際立たせる） */}
-          <div style={{ 
-            position: 'absolute', 
-            inset: 0, 
-            background: 'linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, transparent 40%, rgba(0,0,0,0.7) 100%)',
-            zIndex: 1
-          }} />
-        </div>
-
-        {/* コンテンツ：画面のど真ん中に強制配置します */}
-        <div style={{ 
-          position: 'relative', 
-          zIndex: 10, 
-          height: '100%', 
-          display: 'flex', 
-          flexDirection: 'column', 
-          alignItems: 'center', 
-          justifyContent: 'center',
-          textAlign: 'center',
-          padding: '0 20px',
-          width: '100%'
-        }}>
-          <div className="hero-content">
-            {/* キャッチコピー：公式と同じ巨大サイズ */}
-            <h1 style={{ 
-              color: 'white', 
-              fontSize: 'clamp(2.5rem, 10vw, 6rem)', 
-              fontWeight: 900, 
-              lineHeight: 1.1,
-              marginBottom: '2.5rem',
-              letterSpacing: '-0.02em'
-            }}>
-              ITで社会を支え、<br />
-              <span style={{ 
-                background: 'linear-gradient(to right, #3182CE, #9D72FF, #FF5BAE)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent'
-              }}>
-                物語を完成させる。
-              </span>
-            </h1>
-
-            {/* リード文：公式と同じ透過感のあるボックス */}
-            <div style={{
-              backgroundColor: 'rgba(255,255,255,0.08)',
-              backdropFilter: 'blur(30px)',
-              WebkitBackdropFilter: 'blur(30px)',
-              border: '1px solid rgba(255,255,255,0.15)',
-              borderRadius: '40px',
-              padding: '2.5rem',
-              maxWidth: '700px',
-              margin: '0 auto',
-              boxShadow: '0 20px 50px rgba(0,0,0,0.3)'
-            }}>
-              <p style={{ 
-                color: 'white', 
-                fontSize: 'clamp(0.9rem, 2vw, 1.2rem)', 
-                lineHeight: 2, 
-                letterSpacing: '0.2em',
-                fontWeight: 500
-              }}>
-                私たちは、企業の大きなビジョンにおける「ラスト・ピース」。<br />
-                停滞していた物語に鼓動を与え、加速させるITの歯車です。
-              </p>
+    <div style={{ backgroundColor: 'black', minHeight: '100vh', width: '100%', margin: 0, padding: 0, overflowX: 'hidden' }}>
+      {/* オープニング演出レイヤー：White Canvas */}
+      <AnimatePresence>
+        {!isOpeningComplete && (
+          <div className="opening-overlay" style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 9999,
+            backgroundColor: '#FFFFFF',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            pointerEvents: 'none',
+            overflow: 'hidden'
+          }}>
+            
+            {/* 背景の装飾：浮遊する幾何学パーツ（イラスト要素） */}
+            <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
+              {[...Array(12)].map((_, i) => (
+                <div key={i} className="opening-bg-shape" style={{
+                  position: 'absolute',
+                  width: '40px',
+                  height: '40px',
+                  border: '1px solid #E2E8F0',
+                  borderRadius: i % 3 === 0 ? '50%' : '8px',
+                  top: `${Math.random() * 100}%`,
+                  left: `${Math.random() * 100}%`,
+                  transform: `rotate(${Math.random() * 360}deg)`
+                }} />
+              ))}
             </div>
-          </div>
-        </div>
-        </section>
+
+            <div className="opening-overlay-content" style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
+              {/* 事業ドメインを象徴するアイコン群：サークル状に配置 */}
+              <div style={{ position: 'relative', width: windowWidth < 768 ? '220px' : '300px', height: windowWidth < 768 ? '220px' : '300px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                {[
+                  { icon: <Code2 size={windowWidth < 768 ? 20 : 24} />, top: '-10%', left: '50%' },
+                  { icon: <BrainCircuit size={windowWidth < 768 ? 20 : 24} />, top: '25%', left: '110%' },
+                  { icon: <Sparkles size={windowWidth < 768 ? 20 : 24} />, top: '85%', left: '85%' },
+                  { icon: <Rocket size={windowWidth < 768 ? 20 : 24} />, top: '85%', left: '15%' },
+                  { icon: <Zap size={windowWidth < 768 ? 20 : 24} />, top: '25%', left: '-10%' },
+                ].map((item, idx) => (
+                  <div key={idx} className="opening-icon" style={{
+                    position: 'absolute',
+                    top: item.top,
+                    left: item.left,
+                    transform: 'translate(-50%, -50%)',
+                    color: '#94A3B8',
+                    backgroundColor: '#F8FAFC',
+                    padding: windowWidth < 768 ? '10px' : '15px',
+                    borderRadius: '12px',
+                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)'
+                  }}>
+                    {item.icon}
+                  </div>
+                ))}
+
+                {/* 中央のロゴ：文字の間隔を保持しつつ、外側のコンテナと軸を統一 */}
+                <h2 className="opening-logo" style={{
+                  color: '#0D1B3E',
+                  fontSize: windowWidth < 768 ? '2.0rem' : 'clamp(2.5rem, 8vw, 4.5rem)',
+                  fontWeight: 200,
+                  letterSpacing: '1.2em',
+                  padding: 0,
+                  // 右側に残る字間余白をマイナスマージンで相殺し、完全な幾何学的中央を実現
+                  marginRight: '-1.2em'
+                }}>
+                  MEECE
+                </h2>
+              </div>
+              
+              <p className="opening-logo" style={{ 
+                marginTop: '40px', 
+                color: '#94A3B8', 
+                fontSize: '12px', 
+                fontWeight: 600, 
+                letterSpacing: '0.4em',
+                textTransform: 'uppercase',
+                textAlign: 'center',
+                // 右側の字間余白を相殺し、上のロゴと垂直中央軸を完全に一致させる
+                marginRight: '-0.4em'
+              }}>
+                Technology x Design
+              </p>
+            </div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      <Navbar />
+      
+      <main style={{ position: 'relative', width: '100%' }}>
+        {/* ヒーローセクション（1枚目：シネマティック・X・レイアウト） */}
+        <section style={{ position: 'relative', width: '100%', height: '100vh', overflow: 'hidden', backgroundColor: '#000814' }}>
+          {/* 1. 背景：5秒おきに切り替わる都市景色 */}
+          <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={backgroundImages[bgIndex]}
+                src={backgroundImages[bgIndex]}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 1.5, ease: "easeInOut" }}
+                alt="City Background"
+                style={{ 
+                  position: 'absolute',
+                  width: '100%', 
+                  height: '100%', 
+                  objectFit: 'cover', 
+                  filter: 'brightness(1.1) contrast(1.05) saturate(1.2) hue-rotate(-5deg)' 
+                }}
+              />
+            </AnimatePresence>
+            {/* 自然なグラデーションオーバーレイ：雲の色を殺さず文字の視認性を上げる */}
+            <div style={{ 
+              position: 'absolute', 
+              inset: 0, 
+              background: 'linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(0, 8, 20, 0.4) 100%)' 
+            }} />
+          </div>
+
+          {/* 2. Xのエッジ装飾（ガイドラインとしてのみ残す、または削除も可能ですが、一旦全画面に線を引いた状態を維持します） */}
+          <div style={{ position: 'absolute', inset: 0, zIndex: 1 }}>
+            <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 2 }}>
+              <path d="M 0,0 L 100,100 M 100,0 L 0,100" style={{ stroke: 'rgba(255,255,255,0.1)', strokeWidth: 0.1 }} />
+            </svg>
+          </div>
+
+          {/* 3. コンテンツレイヤー */}
+          <div style={{ position: 'relative', zIndex: 10, height: '100%', width: '100%', boxSizing: 'border-box' }}>
+            <div className="hero-content" style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: windowWidth < 768 ? '100px 20px 60px' : '80px 100px' }}>
+              
+              {/* TOP: スローガン（スマホ時は位置を右端に寄せる） */}
+              <div style={{ display: 'flex', justifyContent: 'flex-end', position: windowWidth < 768 ? 'absolute' : 'relative', right: windowWidth < 768 ? '20px' : 'auto', top: windowWidth < 768 ? '100px' : 'auto' }}>
+                <div style={{ 
+                  color: 'white', 
+                  writingMode: 'vertical-rl', 
+                  fontSize: windowWidth < 768 ? '12px' : 'clamp(0.9rem, 1.2vw, 1.1rem)', 
+                  letterSpacing: '0.6em',
+                  fontWeight: 600,
+                  textShadow: '0 0 20px rgba(0,251,255,0.5)'
+                }}>
+                  時代をまたぎ、<br />
+                  新しいデジタルをデザインする。
+                </div>
+              </div>
+
+              {/* MIDDLE: タイトル */}
+              <div style={{ textAlign: 'left', marginTop: 'auto', marginBottom: windowWidth < 768 ? '40px' : '0' }}>
+                <h1 style={{ 
+                  color: 'white', 
+                  fontSize: windowWidth < 768 ? 'clamp(2.5rem, 12vw, 4rem)' : 'clamp(3rem, 8vw, 7.5rem)', 
+                  fontWeight: 900, 
+                  lineHeight: 0.85, 
+                  letterSpacing: '-0.04em',
+
+                  textTransform: 'uppercase',
+                  margin: 0
+                }}>
+                  DIGITAL<br />
+                  CREATIVE<br />
+                  FIRM
+                </h1>
+              </div>
+
+              {/* BOTTOM: 署名（スマホ時はフォントサイズと余白を調整） */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: windowWidth < 768 ? '15px' : '30px', width: '100%', borderTop: '1px solid rgba(255,255,255,0.2)', paddingTop: windowWidth < 768 ? '20px' : '30px' }}>
+                <div style={{ backgroundColor: 'white', color: '#000814', padding: windowWidth < 768 ? '6px 15px' : '10px 25px', borderRadius: '2px', fontWeight: 950, fontSize: windowWidth < 768 ? '18px' : '24px', letterSpacing: '0.1em' }}>
+                  MEECE
+                </div>
+                <p style={{ color: 'white', fontSize: windowWidth < 768 ? '10px' : '13px', letterSpacing: '0.3em', fontWeight: 800 }}>
+                  INNOVATION GUIDE 2026
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
 
         {/* 派手な広告セクション：ビビッドアニメーション & ハイコントラスト版 */}
         <section style={{ 

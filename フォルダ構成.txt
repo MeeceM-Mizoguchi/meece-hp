@@ -1,98 +1,84 @@
-C:\dev\Meece HP\.vscode
-C:\dev\Meece HP\api
-C:\dev\Meece HP\eslint.config.js
-C:\dev\Meece HP\index.html
-C:\dev\Meece HP\old
-C:\dev\Meece HP\openingAILab.mp4
-C:\dev\Meece HP\package-lock.json
-C:\dev\Meece HP\package.json
-C:\dev\Meece HP\postcss.config.js
-C:\dev\Meece HP\public
-C:\dev\Meece HP\README.md
-C:\dev\Meece HP\src
-C:\dev\Meece HP\tailwind.config.js
-C:\dev\Meece HP\tsconfig.app.json
-C:\dev\Meece HP\tsconfig.json
-C:\dev\Meece HP\tsconfig.node.json
-C:\dev\Meece HP\vercel.json
-C:\dev\Meece HP\vite.config.ts
-C:\dev\Meece HP\ÉtÉHÉãÉ_ç\ê¨.txt
-C:\dev\Meece HP\äJî≠éwé¶.txt
-C:\dev\Meece HP\.vscode\settings.json
-C:\dev\Meece HP\api\send-email.ts
-C:\dev\Meece HP\old\AILab.tsx
-C:\dev\Meece HP\old\old_AILab.tsx
-C:\dev\Meece HP\public\ceo.png
-C:\dev\Meece HP\public\main.mp4
-C:\dev\Meece HP\public\sign.png
-C:\dev\Meece HP\public\visionmovie.mp4
-C:\dev\Meece HP\public\vite.svg
-C:\dev\Meece HP\src\.DS_Store
-C:\dev\Meece HP\src\App.css
-C:\dev\Meece HP\src\App.tsx
-C:\dev\Meece HP\src\assets
-C:\dev\Meece HP\src\components
-C:\dev\Meece HP\src\constants
-C:\dev\Meece HP\src\hooks
-C:\dev\Meece HP\src\index.css
-C:\dev\Meece HP\src\main.tsx
-C:\dev\Meece HP\src\pages
-C:\dev\Meece HP\src\types
-C:\dev\Meece HP\src\assets\20260416_Presenàƒì‡.png
-C:\dev\Meece HP\src\assets\react.svg
-C:\dev\Meece HP\src\components\.DS_Store
-C:\dev\Meece HP\src\components\atoms
-C:\dev\Meece HP\src\components\molecules
-C:\dev\Meece HP\src\components\organisms
-C:\dev\Meece HP\src\components\molecules\.DS_Store
-C:\dev\Meece HP\src\components\molecules\PageHero.tsx
-C:\dev\Meece HP\src\components\organisms\.DS_Store
-C:\dev\Meece HP\src\components\organisms\ContactForm.tsx
-C:\dev\Meece HP\src\components\organisms\Footer.tsx
-C:\dev\Meece HP\src\components\organisms\Navbar.tsx
-C:\dev\Meece HP\src\components\organisms\PresentationSlide01.tsx
-C:\dev\Meece HP\src\components\organisms\PresentationSlide02.tsx
-C:\dev\Meece HP\src\components\organisms\PresentationSlide02_2.tsx
-C:\dev\Meece HP\src\components\organisms\PresentationSlide03.tsx
-C:\dev\Meece HP\src\components\organisms\PresentationSlide04.tsx
-C:\dev\Meece HP\src\components\organisms\PresentationSlide05.tsx
-C:\dev\Meece HP\src\components\organisms\PresentationSlide06.tsx
-C:\dev\Meece HP\src\components\organisms\PresentationSlide07.tsx
-C:\dev\Meece HP\src\components\organisms\PresentationSlide08.tsx
-C:\dev\Meece HP\src\components\organisms\PresentationSlide09.tsx
-C:\dev\Meece HP\src\components\organisms\PresentationSlide10.tsx
-C:\dev\Meece HP\src\components\organisms\PresentationSlide11.tsx
-C:\dev\Meece HP\src\components\organisms\PresentationSlide12.tsx
-C:\dev\Meece HP\src\components\organisms\PresentationSlide13.tsx
-C:\dev\Meece HP\src\components\organisms\PresentationSlide14.tsx
-C:\dev\Meece HP\src\constants\.DS_Store
-C:\dev\Meece HP\src\constants\newsData.tsx
-C:\dev\Meece HP\src\constants\style.ts
-C:\dev\Meece HP\src\pages\.DS_Store
-C:\dev\Meece HP\src\pages\About.tsx
-C:\dev\Meece HP\src\pages\AI.tsx
-C:\dev\Meece HP\src\pages\Cases.tsx
-C:\dev\Meece HP\src\pages\Company.tsx
-C:\dev\Meece HP\src\pages\Consulting.tsx
-C:\dev\Meece HP\src\pages\Development.tsx
-C:\dev\Meece HP\src\pages\DiagnosisPage.tsx
-C:\dev\Meece HP\src\pages\EnterpriseApproach.tsx
-C:\dev\Meece HP\src\pages\EnterprisePOCDetail.tsx
-C:\dev\Meece HP\src\pages\Estimate.tsx
-C:\dev\Meece HP\src\pages\Home.tsx
-C:\dev\Meece HP\src\pages\news
-C:\dev\Meece HP\src\pages\News.tsx
-C:\dev\Meece HP\src\pages\PresentationRoom.tsx
-C:\dev\Meece HP\src\pages\RapidDevelopmentPOC.tsx
-C:\dev\Meece HP\src\pages\Recruit.tsx
-C:\dev\Meece HP\src\pages\SalesApproach.tsx
-C:\dev\Meece HP\src\pages\StartupApproach.tsx
-C:\dev\Meece HP\src\pages\Support.tsx
-C:\dev\Meece HP\src\pages\news\20260105_Renewal.tsx
-C:\dev\Meece HP\src\pages\news\20260105_Vision.tsx
-C:\dev\Meece HP\src\pages\news\20260126_Simulator.tsx
-C:\dev\Meece HP\src\pages\news\20260311_NewsDetail.tsx
-C:\dev\Meece HP\src\pages\news\20260406_RapidPOC.tsx
-C:\dev\Meece HP\src\pages\news\20260416_Presentation.tsx
-C:\dev\Meece HP\src\pages\news\20260424_GW.tsx
-C:\dev\Meece HP\src\types\index.ts
+Ôªø.gitignore
+eslint.config.js
+index.html
+openingAILab.mp4
+package-lock.json
+package.json
+postcss.config.js
+README.md
+tailwind.config.js
+tsconfig.app.json
+tsconfig.json
+tsconfig.node.json
+vercel.json
+vite.config.ts
+„Éï„Ç©„É´„ÉÄÊßãÊàê.txt
+ÈñãÁô∫ÊåáÁ§∫.txt
+.vscode\settings.json
+api\send-email.ts
+old\AILab.tsx
+old\old_AILab.tsx
+public\ceo.png
+public\main.mp4
+public\sign.png
+public\visionmovie.mp4
+public\vite.svg
+src\.DS_Store
+src\App.css
+src\App.tsx
+src\index.css
+src\main.tsx
+src\assets\20260416_PresenÊ°àÂÜÖ.png
+src\assets\react.svg
+src\components\.DS_Store
+src\components\molecules\.DS_Store
+src\components\molecules\PageHero.tsx
+src\components\organisms\.DS_Store
+src\components\organisms\ContactForm.tsx
+src\components\organisms\Footer.tsx
+src\components\organisms\Navbar.tsx
+src\components\organisms\PresentationSlide01.tsx
+src\components\organisms\PresentationSlide02.tsx
+src\components\organisms\PresentationSlide02_2.tsx
+src\components\organisms\PresentationSlide03.tsx
+src\components\organisms\PresentationSlide04.tsx
+src\components\organisms\PresentationSlide05.tsx
+src\components\organisms\PresentationSlide06.tsx
+src\components\organisms\PresentationSlide07.tsx
+src\components\organisms\PresentationSlide08.tsx
+src\components\organisms\PresentationSlide09.tsx
+src\components\organisms\PresentationSlide10.tsx
+src\components\organisms\PresentationSlide11.tsx
+src\components\organisms\PresentationSlide12.tsx
+src\components\organisms\PresentationSlide13.tsx
+src\components\organisms\PresentationSlide14.tsx
+src\constants\.DS_Store
+src\constants\newsData.tsx
+src\constants\style.ts
+src\pages\.DS_Store
+src\pages\About.tsx
+src\pages\AI.tsx
+src\pages\Cases.tsx
+src\pages\Company.tsx
+src\pages\Consulting.tsx
+src\pages\Development.tsx
+src\pages\DiagnosisPage.tsx
+src\pages\EnterpriseApproach.tsx
+src\pages\EnterprisePOCDetail.tsx
+src\pages\Estimate.tsx
+src\pages\Home.tsx
+src\pages\News.tsx
+src\pages\PresentationRoom.tsx
+src\pages\RapidDevelopmentPOC.tsx
+src\pages\Recruit.tsx
+src\pages\SalesApproach.tsx
+src\pages\StartupApproach.tsx
+src\pages\Support.tsx
+src\pages\news\20260105_Renewal.tsx
+src\pages\news\20260105_Vision.tsx
+src\pages\news\20260126_Simulator.tsx
+src\pages\news\20260311_NewsDetail.tsx
+src\pages\news\20260406_RapidPOC.tsx
+src\pages\news\20260416_Presentation.tsx
+src\pages\news\20260424_GW.tsx
+src\types\index.ts
