@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { ChevronRight, Sparkles } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
@@ -84,7 +85,7 @@ export const Navbar: React.FC = () => {
     >
       <div className="max-w-360 mx-auto px-10 flex items-center justify-between">
         {/* ロゴ：HTML版のオリジナルソースコードをReact用に完全再現 */}
-        <a href="/" className="shrink-0 transition-all hover:opacity-80">
+        <Link to="/" className="shrink-0 transition-all hover:opacity-80">
           <svg width="150" height="58" viewBox="0 0 650 250" className="overflow-visible">
             <defs>
               <linearGradient id="logoLivingGrad" x1="0%" y1="0%" x2="100%" y2="0.1%">
@@ -118,21 +119,21 @@ export const Navbar: React.FC = () => {
               eece
             </text>
           </svg>
-        </a>
+        </Link>
 
         {/* メニュー：SERVICESにプルダウン機能を実装 */}
         <div className="hidden xl:flex items-center gap-8">
           {navLinks.map((link) => (
             <div key={link.name} className="relative group flex items-center h-full py-4">
-              <a 
-                href={link.href} 
+              <Link
+                to={link.href}
                 className="text-[13px] font-normal tracking-[0.15em] transition-colors whitespace-nowrap"
                 style={{ color: '#0D1B3E' }}
                 onMouseEnter={(e) => e.currentTarget.style.color = '#3182CE'}
                 onMouseLeave={(e) => e.currentTarget.style.color = '#0D1B3E'}
               >
                 {link.name}
-              </a>
+              </Link>
 
               {/* PC用プルダウンメニュー */}
               {link.dropdown && (
@@ -149,8 +150,8 @@ export const Navbar: React.FC = () => {
                   >
                     {link.dropdown.map((sub: any) => (
                       <div key={sub.href} className="relative group/sub">
-                        <a
-                          href={sub.href}
+                        <Link
+                          to={sub.href}
                           className="px-5 py-3 text-[12px] font-bold transition-all rounded-lg flex items-center justify-between"
                           style={{ 
                             color: sub.isHighlight ? '#3182CE' : '#4B5563', 
@@ -167,7 +168,7 @@ export const Navbar: React.FC = () => {
                           }}
                         >
                           {sub.name}
-                        </a>
+                        </Link>
 
                         {/* 3階層目のサブメニュー（AI開発ラボの詳細） */}
                         {sub.subMenu && (
@@ -181,9 +182,9 @@ export const Navbar: React.FC = () => {
                               border: '1px solid #F3F4F6'
                             }}>
                               {sub.subMenu.map((item: any) => (
-                                <a
+                                <Link
                                   key={item.href}
-                                  href={item.href}
+                                  to={item.href}
                                   className="block px-5 py-3 text-[11px] font-bold transition-all rounded-lg"
                                   style={{ 
                                     color: item.isHighlight ? '#FFFFFF' : '#4B5563',
@@ -203,7 +204,7 @@ export const Navbar: React.FC = () => {
                                   }}
                                 >
                                   {item.name}
-                                </a>
+                                </Link>
                               ))}
                             </div>
                           </div>
@@ -217,18 +218,18 @@ export const Navbar: React.FC = () => {
           ))}
           <div className="flex items-center gap-4 ml-4 shrink-0">
             {/* ABOUT US ボタン (PresentationRoomへのリンク) */}
-            <a 
-              href="/presentation" 
+            <Link 
+              to="/presentation" 
               className="px-6 py-2.5 rounded-full text-[12px] font-medium transition-all flex items-center gap-2 tracking-widest uppercase bg-linear-to-r from-meece-blue to-meece-purple text-white hover:shadow-lg hover:scale-105 active:scale-95"
             >
               <Sparkles size={14} /> ABOUT US
-            </a>
+            </Link>
 
-            <a href="/estimate" className="px-6 py-2.5 rounded-full text-[12px] font-medium transition-all flex items-center gap-2 tracking-widest uppercase bg-[#0D1B3E] text-white hover:bg-[#3182CE]">
+            <Link to="/estimate" className="px-6 py-2.5 rounded-full text-[12px] font-medium transition-all flex items-center gap-2 tracking-widest uppercase bg-[#0D1B3E] text-white hover:bg-[#3182CE]">
               ESTIMATE <ChevronRight size={12} />
-            </a>
-            <a 
-              href="/#contact" 
+            </Link>
+            <Link 
+              to="/#contact" 
               className="px-6 py-2.5 rounded-full text-[12px] font-medium border transition-all flex items-center gap-2 tracking-widest uppercase"
               style={{
                 backgroundColor: 'transparent',
@@ -237,7 +238,7 @@ export const Navbar: React.FC = () => {
               }}
             >
               CONTACT <ChevronRight size={12} />
-            </a>
+            </Link>
           </div>
         </div>
 
@@ -279,21 +280,21 @@ export const Navbar: React.FC = () => {
             {navLinks.map((link) => (
     <div key={link.name} className="w-full">
       {/* メインリンク */}
-      <a
-        href={link.href}
+      <Link
+        to={link.href}
         onClick={() => !link.dropdown && setIsMenuOpen(false)}
         className="text-[14px] font-extrabold text-[#0D1B3E] no-underline tracking-widest py-2.5 text-left flex items-center justify-between"
       >
         {link.name}
-      </a>
+      </Link>
       
       {/* 第2階層：SERVICES配下など */}
       {link.dropdown && (
         <div className="flex flex-col w-full mt-2 ml-4 border-l-2 border-slate-50">
           {link.dropdown.map((sub: any) => (
             <div key={sub.href} className="flex flex-col">
-              <a
-                          href={sub.href}
+              <Link
+                          to={sub.href}
                           className="px-5 py-3 text-[12px] font-bold transition-all rounded-lg flex items-center justify-between"
                           style={{ 
                             color: sub.isHighlight ? '#3182CE' : '#4B5563', 
@@ -302,15 +303,15 @@ export const Navbar: React.FC = () => {
                           }}
               >
                 {sub.name}
-              </a>
+              </Link>
 
               {/* 第3階層：AI開発ラボの詳細メニュー */}
               {sub.subMenu && (
                 <div className="flex flex-col ml-4 mb-2 bg-slate-50/50 rounded-xl">
                   {sub.subMenu.map((item: any) => (
-                    <a
+                    <Link
                       key={item.href}
-                      href={item.href}
+                      to={item.href}
                       onClick={() => setIsMenuOpen(false)}
                       style={{ 
                         color: '#6B7280',
@@ -324,7 +325,7 @@ export const Navbar: React.FC = () => {
                       }}
                     >
                       <span style={{ color: '#3182CE' }}>•</span> {item.name}
-                    </a>
+                    </Link>
                   ))}
                 </div>
               )}
@@ -338,15 +339,15 @@ export const Navbar: React.FC = () => {
 
           {/* モバイル版アクションボタン：ESTIMATE & CONTACT */}
           <div className="w-full flex flex-col gap-4 mt-4 pt-8 border-t border-gray-100 pb-10">
-            <a 
-              href="/estimate" 
+            <Link 
+              to="/estimate" 
               className="w-full py-4 rounded-full text-[13px] font-bold transition-all flex items-center justify-center gap-2 tracking-widest uppercase bg-[#0D1B3E] text-white"
               onClick={() => setIsMenuOpen(false)}
             >
               ESTIMATE <ChevronRight size={14} />
-            </a>
-            <a 
-              href="/#contact" 
+            </Link>
+            <Link 
+              to="/#contact" 
               className="w-full py-4 rounded-full text-[13px] font-bold border transition-all flex items-center justify-center gap-2 tracking-widest uppercase"
               style={{
                 backgroundColor: 'transparent',
@@ -356,7 +357,7 @@ export const Navbar: React.FC = () => {
               onClick={() => setIsMenuOpen(false)}
             >
               CONTACT <ChevronRight size={14} />
-            </a>
+            </Link>
           </div>
         </div>
       )}

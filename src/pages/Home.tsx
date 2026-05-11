@@ -13,7 +13,12 @@ let openingHasPlayed = false;
 
 function Home() {
   const [windowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
-  const [isOpeningComplete, setIsOpeningComplete] = useState(openingHasPlayed); // オープニング完了フラグ
+  // SPA遷移 OR 同一オリジンからのfullリロードの場合はスキップ
+  const skipOpening = openingHasPlayed || (() => {
+    try { return new URL(document.referrer).origin === window.location.origin; }
+    catch { return false; }
+  })();
+  const [isOpeningComplete, setIsOpeningComplete] = useState(skipOpening); // オープニング完了フラグ
 
   // --- スクロール禁止・解除の制御 ---
   useEffect(() => {
@@ -49,7 +54,7 @@ function Home() {
     let bgTimer: any;
 
     // HP内遷移でTOPに来た場合はオープニングスキップ
-    if (openingHasPlayed) {
+    if (skipOpening) {
       gsap.set(".hero-content", { opacity: 1, y: 0 });
       bgTimer = setInterval(() => {
         setBgIndex((prev) => (prev + 1) % backgroundImages.length);
