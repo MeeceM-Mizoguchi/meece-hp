@@ -1,4 +1,13 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+}
 
 // ロゴ専用のフォント（Fredoka, Pacifico）を読み込み
 const fontLink = document.createElement('link');
@@ -36,6 +45,7 @@ import SalesApproach from './pages/SalesApproach';
 function App() {
   return (
     <>
+      <ScrollToTop />
       <Routes>
           {/* TOPページの設定 */}
           <Route path="/" element={<Home />} />
