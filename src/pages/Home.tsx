@@ -8,9 +8,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Code2, BrainCircuit, Compass, Rocket, Zap, Sparkles } from 'lucide-react';
 import { newsItems } from '../constants/newsData'; // ニュースデータ台帳をインポート
 
+// SPA navigation flag: resets on page reload, persists across route changes
+let openingHasPlayed = false;
+
 function Home() {
   const [windowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
-  const [isOpeningComplete, setIsOpeningComplete] = useState(false); // オープニング完了フラグ
+  const [isOpeningComplete, setIsOpeningComplete] = useState(openingHasPlayed); // オープニング完了フラグ
 
   // --- スクロール禁止・解除の制御 ---
   useEffect(() => {
@@ -45,9 +48,19 @@ function Home() {
   useEffect(() => {
     let bgTimer: any;
 
+    // HP内遷移でTOPに来た場合はオープニングスキップ
+    if (openingHasPlayed) {
+      gsap.set(".hero-content", { opacity: 1, y: 0 });
+      bgTimer = setInterval(() => {
+        setBgIndex((prev) => (prev + 1) % backgroundImages.length);
+      }, 10000);
+      return () => { clearInterval(bgTimer); };
+    }
+
     // 1. オープニング演出：White Storyboard
     const tl = gsap.timeline({
       onComplete: () => {
+        openingHasPlayed = true;
         setIsOpeningComplete(true);
         // オープニング完了後、はじめて5秒タイマーをスタートさせる
         bgTimer = setInterval(() => {
@@ -146,6 +159,7 @@ function Home() {
                 const heroAnim = gsap.getById("heroAnim");
                 if (heroAnim) heroAnim.kill();
 
+                openingHasPlayed = true;
                 setIsOpeningComplete(true);
                 // 確実に表示状態をセット
                 gsap.set(".hero-content", { opacity: 1, y: 0, visibility: "visible" });

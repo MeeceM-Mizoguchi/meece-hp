@@ -33,60 +33,64 @@ import DiagnosisPage from './pages/DiagnosisPage';
 import EnterpriseApproach from './pages/EnterpriseApproach';
 import StartupApproach from './pages/StartupApproach';
 import SalesApproach from './pages/SalesApproach';
+import { MeeceCanvas } from './components/organisms/MeeceCanvas';
 
 function App() {
-  return (
-    <Routes>
-        {/* TOPページの設定 */}
-        <Route path="/" element={<Home />} />
+  return (
+    <>
+      <Routes>
+          {/* TOPページの設定 */}
+          <Route path="/" element={<Home />} />
 
-        {/* Aboutページの設定 */}
-        <Route path="/about" element={<About />} />
-        {/* PHILOSOPHYからもAboutページを表示するように追加 */}
-        <Route path="/philosophy" element={<About />} />
+          {/* Aboutページの設定 */}
+          <Route path="/about" element={<About />} />
+          {/* PHILOSOPHYからもAboutページを表示するように追加 */}
+          <Route path="/philosophy" element={<About />} />
 
-        {/* 会社概要ページの設定 */}
-        <Route path="/company" element={<Company />} />
+          {/* 会社概要ページの設定 */}
+          <Route path="/company" element={<Company />} />
 
-        {/* サービス関連のルーティング設定 */}
-        <Route path="/services/development" element={<Development />} />
-        <Route path="/services/ai" element={<AI />} />
-        {/* AI Lab の Route を削除しました */}
+          {/* サービス関連のルーティング設定 */}
+          <Route path="/services/development" element={<Development />} />
+          <Route path="/services/ai" element={<AI />} />
+          {/* AI Lab の Route を削除しました */}
 
-        {/* ITコンサルページ */}
-        <Route path="/services/consulting" element={<Consulting />} />
-        <Route path="/services/support" element={<Support />} />
+          {/* ITコンサルページ */}
+          <Route path="/services/consulting" element={<Consulting />} />
+          <Route path="/services/support" element={<Support />} />
 
-        {/* 支援事例ページの設定 */}
-        <Route path="/cases" element={<Cases />} />
+          {/* 支援事例ページの設定 */}
+          <Route path="/cases" element={<Cases />} />
 
-        {/* ニュースページの設定 */}
-        <Route path="/news" element={<News />} />
+          {/* ニュースページの設定 */}
+          <Route path="/news" element={<News />} />
 
-        {/* ニュース詳細記事の設定 */}
-        <Route path="/news/20260507-digital-creative-firm" element={<DigitalCreativeFirmArticle />} />
-        <Route path="/news/20260424-gw-notice" element={<GWNotice />} />
-        <Route path="/news/20260416-presentation" element={<PresentationArticle />} />
-        <Route path="/news/20260401-rapid-poc" element={<RapidPOCArticle />} />
-        <Route path="/news/20260311-website-update" element={<NewsDetail />} />
-        <Route path="/news/20260126-simulator" element={<SimulatorArticle />} />
-        <Route path="/news/20260105-vision" element={<VisionArticle />} />
-        <Route path="/news/20260105-renewal" element={<RenewalArticle />} />
-        <Route path="/estimate" element={<Estimate />} />
-        <Route path="/recruit" element={<Recruit />} />
-        <Route path="/presentation" element={<PresentationRoom />} />
-        <Route path="/services/rapid-poc" element={<RapidDevelopmentPOC />} />
-        <Route path="/services/rapid-poc/enterprise" element={<EnterprisePOCDetail />} />
-        <Route path="/services/rapid-poc/diagnosis" element={<DiagnosisPage />} />
-        <Route path="/services/rapid-poc/enterprise-approach" element={<EnterpriseApproach />} />
-        <Route path="/services/rapid-poc/startup-approach" element={<StartupApproach />} />
-        <Route path="/services/rapid-poc/sales-approach" element={<SalesApproach />} />
+          {/* ニュース詳細記事の設定 */}
+          <Route path="/news/20260507-digital-creative-firm" element={<DigitalCreativeFirmArticle />} />
+          <Route path="/news/20260424-gw-notice" element={<GWNotice />} />
+          <Route path="/news/20260416-presentation" element={<PresentationArticle />} />
+          <Route path="/news/20260401-rapid-poc" element={<RapidPOCArticle />} />
+          <Route path="/news/20260311-website-update" element={<NewsDetail />} />
+          <Route path="/news/20260126-simulator" element={<SimulatorArticle />} />
+          <Route path="/news/20260105-vision" element={<VisionArticle />} />
+          <Route path="/news/20260105-renewal" element={<RenewalArticle />} />
+          <Route path="/estimate" element={<Estimate />} />
+          <Route path="/recruit" element={<Recruit />} />
+          <Route path="/presentation" element={<PresentationRoom />} />
+          <Route path="/services/rapid-poc" element={<RapidDevelopmentPOC />} />
+          <Route path="/services/rapid-poc/enterprise" element={<EnterprisePOCDetail />} />
+          <Route path="/services/rapid-poc/diagnosis" element={<DiagnosisPage />} />
+          <Route path="/services/rapid-poc/enterprise-approach" element={<EnterpriseApproach />} />
+          <Route path="/services/rapid-poc/startup-approach" element={<StartupApproach />} />
+          <Route path="/services/rapid-poc/sales-approach" element={<SalesApproach />} />
 
-        {/* スライド13からの短縮URL設定 */}
-        <Route path="/diagnosis" element={<DiagnosisPage />} />
-        <Route path="/lab" element={<RapidDevelopmentPOC />} />
-      </Routes>
-  );
+          {/* スライド13からの短縮URL設定 */}
+          <Route path="/diagnosis" element={<DiagnosisPage />} />
+          <Route path="/lab" element={<RapidDevelopmentPOC />} />
+        </Routes>
+      <MeeceCanvas />
+    </>
+  );
 }
 
 export default App;
