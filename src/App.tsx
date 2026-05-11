@@ -33,8 +33,6 @@ import DiagnosisPage from './pages/DiagnosisPage';
 import EnterpriseApproach from './pages/EnterpriseApproach';
 import StartupApproach from './pages/StartupApproach';
 import SalesApproach from './pages/SalesApproach';
-import { MeeceCanvas } from './components/organisms/MeeceCanvas';
-
 function App() {
   return (
     <>
@@ -88,7 +86,6 @@ function App() {
           <Route path="/diagnosis" element={<DiagnosisPage />} />
           <Route path="/lab" element={<RapidDevelopmentPOC />} />
         </Routes>
-      <MeeceCanvas />
     </>
   );
 }
