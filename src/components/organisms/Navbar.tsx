@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Logo } from './Logo';
 import { Link } from 'react-router-dom';
 import { ChevronRight, Sparkles } from 'lucide-react';
 
@@ -86,39 +87,7 @@ export const Navbar: React.FC = () => {
       <div className="max-w-360 mx-auto px-10 flex items-center justify-between">
         {/* ロゴ：HTML版のオリジナルソースコードをReact用に完全再現 */}
         <Link to="/" className="shrink-0 transition-all hover:opacity-80">
-          <svg width="150" height="58" viewBox="0 0 650 250" className="overflow-visible">
-            <defs>
-              <linearGradient id="logoLivingGrad" x1="0%" y1="0%" x2="100%" y2="0.1%">
-                <stop offset="0%" stopColor="#2EE5F2" />
-                <stop offset="28%" stopColor="#5291FF" />
-                <stop offset="68%" stopColor="#9870FF" />
-                <stop offset="100%" stopColor="#FF70AB" />
-              </linearGradient>
-            </defs>
-            {/* オリジナルの座標とフォント指定をそのまま適用 */}
-            <text 
-              x="50" y="160" 
-              fill="url(#logoLivingGrad)"
-              style={{ 
-                fontFamily: "'Fredoka', sans-serif", 
-                fontSize: '170px', 
-                fontWeight: 700, 
-                letterSpacing: '-0.02em' 
-              }}
-            >
-              M
-            </text>
-            <text 
-              x="180" y="156" 
-              fill="url(#logoLivingGrad)"
-              style={{ 
-                fontFamily: "'Pacifico', cursive", 
-                fontSize: '140px' 
-              }}
-            >
-              eece
-            </text>
-          </svg>
+          <Logo width={240} compact />
         </Link>
 
         {/* メニュー：SERVICESにプルダウン機能を実装 */}

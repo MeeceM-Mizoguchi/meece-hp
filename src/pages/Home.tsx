@@ -6,7 +6,7 @@ import { ContactForm } from '../components/organisms/ContactForm';
 import gsap from 'gsap';
 import { motion, AnimatePresence } from 'framer-motion';
 import { OpeningAnimation } from '../components/organisms/OpeningAnimation';
-import { Code2, BrainCircuit, Compass, Rocket, Zap, Sparkles } from 'lucide-react';
+import { Code2, BrainCircuit, Compass, Rocket, Sparkles } from 'lucide-react';
 import { newsItems } from '../constants/newsData'; // ニュースデータ台帳をインポート
 
 // SPA navigation flag: resets on page reload, persists across route changes
