@@ -5,7 +5,11 @@
       "Bash(npx tsc *)",
       "Bash(python3 /tmp/fix_navbar.py)",
       "Bash(python3 fix_navbar.py)",
-      "Bash(python3 fix_navbar2.py)"
+      "Bash(python3 fix_navbar2.py)",
+      "Bash(python3 -c \"import json; d=json.load\\(open\\('c:/dev/Meece HP/package.json'\\)\\); deps={**d.get\\('dependencies',{}\\), **d.get\\('devDependencies',{}\\)}; [print\\(k,v\\) for k,v in deps.items\\(\\) if 'motion' in k or 'framer' in k]\")",
+      "Bash(python3 fix_home_opening.py)",
+      "Bash(python3 fix_home_opening2.py)",
+      "Bash(python3 -c ' *)"
     ]
   }
 }

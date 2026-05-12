@@ -5,6 +5,7 @@ import { Footer } from '../components/organisms/Footer';
 import { ContactForm } from '../components/organisms/ContactForm';
 import gsap from 'gsap';
 import { motion, AnimatePresence } from 'framer-motion';
+import { OpeningAnimation } from '../components/organisms/OpeningAnimation';
 import { Code2, BrainCircuit, Compass, Rocket, Zap, Sparkles } from 'lucide-react';
 import { newsItems } from '../constants/newsData'; // ニュースデータ台帳をインポート
 
@@ -50,231 +51,42 @@ function Home() {
   ];
   const [bgIndex, setBgIndex] = useState(0);
 
+  // 初期表示: スキップ時はヒーローを即表示、初回はhide
   useEffect(() => {
-    let bgTimer: any;
-
-    // HP内遷移でTOPに来た場合はオープニングスキップ
     if (skipOpening) {
       gsap.set(".hero-content", { opacity: 1, y: 0 });
-      bgTimer = setInterval(() => {
-        setBgIndex((prev) => (prev + 1) % backgroundImages.length);
-      }, 10000);
-      return () => { clearInterval(bgTimer); };
+    } else {
+      gsap.set(".hero-content", { opacity: 0, y: 30 });
     }
-
-    // 1. オープニング演出：White Storyboard
-    const tl = gsap.timeline({
-      onComplete: () => {
-        openingHasPlayed = true;
-        setIsOpeningComplete(true);
-        // オープニング完了後、はじめて5秒タイマーをスタートさせる
-        bgTimer = setInterval(() => {
-          setBgIndex((prev) => (prev + 1) % backgroundImages.length);
-        }, 10000);
-      }
-    });
-
-    tl.set(".opening-logo", { opacity: 0, y: 20, letterSpacing: "1.2em" })
-      .set(".opening-icon", { opacity: 0, scale: 0, y: 30 })
-      .set(".opening-bg-shape", { opacity: 0 })
-      
-      // Step 1: クリアなロゴが静かに浮上
-      .to(".opening-logo", { opacity: 1, y: 0, duration: 1.2, ease: "power3.out" })
-      
-      // Step 2: 背景に薄い幾何学模様（イラスト的要素）が散りばめられる
-      .to(".opening-bg-shape", { opacity: 0.1, duration: 1, stagger: 0.05, ease: "power2.out" }, "-=0.5")
-      
-      // Step 3: 周囲に事業ドメインアイコンが華やかに現れる
-      .to(".opening-icon", { 
-        opacity: 1, 
-        scale: 1, 
-        y: 0, 
-        duration: 0.8, 
-        stagger: { amount: 0.6, from: "center" }, 
-        ease: "back.out(1.7)" 
-      }, "-=0.8")
-      
-      // Step 4: 全体がゆっくりと浮遊し、期待感を高める
-      .to(".opening-overlay-content", {
-        y: -20,
-        duration: 2,
-        ease: "sine.inOut"
-      })
-      
-      // Step 5: 収束し、メインビジュアルへ
-      .to(".opening-overlay", { 
-        opacity: 0, 
-        duration: 1, 
-        ease: "power2.inOut",
-        onComplete: () => {
-          // アニメーション終了後に要素を完全に消去する
-          gsap.set(".opening-overlay", { display: "none" });
-        }
-      }, "+=0.2");
-
-    // 2. メインコンテンツの登場（全体の尺に合わせて調整）
-    // Skipボタンと競合しないよう、初期状態をセットした上で .to で動かします
-    gsap.set(".hero-content", { opacity: 0, y: 30 });
-    gsap.to(".hero-content", 
-      { 
-        opacity: 1, 
-        y: 0, 
-        duration: 1.5, 
-        stagger: 0.3, 
-        ease: "power3.out", 
-        delay: 4.8,
-        id: "heroAnim" // 特定して停止できるようにIDを付与
-      }
-    );
-
-    return () => {
-      if (bgTimer) clearInterval(bgTimer); // タイマーが動いていれば止める
-    };
   }, []);
 
-  // 動画の自動ループ再生はHTMLの属性で行うため、このブロックは削除しました
+  // オープニング完了後に背景スライドショーを開始
+  useEffect(() => {
+    if (!isOpeningComplete) return;
+    const bgTimer = setInterval(() => {
+      setBgIndex((prev) => (prev + 1) % backgroundImages.length);
+    }, 10000);
+    return () => clearInterval(bgTimer);
+  }, [isOpeningComplete]);
+
+  // オープニング完了ハンドラ
+  const handleOpeningComplete = () => {
+    openingHasPlayed = true;
+    setIsOpeningComplete(true);
+    gsap.to(".hero-content", { opacity: 1, y: 0, duration: 1.5, stagger: 0.3, ease: "power3.out" });
+  };
+
 
   return (
     <div style={{ backgroundColor: 'black', minHeight: '100vh', width: '100%', margin: 0, padding: 0, overflowX: 'hidden' }}>
-      {/* オープニング演出レイヤー：White Canvas */}
+      {/* 新オープニングアニメーション */}
       <AnimatePresence>
         {!isOpeningComplete && (
-          <div className="opening-overlay" style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '100vw',
-            height: '100vh',
-            zIndex: 9999,
-            backgroundColor: '#FFFFFF',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            pointerEvents: 'all',
-            overflow: 'hidden',
-            touchAction: 'none'
-          }}>
-            
-            {/* スキップボタン */}
-            <button
-              onClick={() => {
-                // すべてのアニメーションを即座に停止
-                gsap.killTweensOf(".opening-logo, .opening-icon, .opening-bg-shape, .opening-overlay-content, .opening-overlay, .hero-content");
-                // ID指定でヒーローアニメーションも確実に停止
-                const heroAnim = gsap.getById("heroAnim");
-                if (heroAnim) heroAnim.kill();
-
-                openingHasPlayed = true;
-                setIsOpeningComplete(true);
-                // 確実に表示状態をセット
-                gsap.set(".hero-content", { opacity: 1, y: 0, visibility: "visible" });
-              }}
-              style={{
-                position: 'absolute',
-                top: '30px',
-                right: '30px',
-                zIndex: 10000,
-                backgroundColor: '#0D1B3E',
-                border: 'none',
-                color: '#FFFFFF',
-                padding: '10px 24px',
-                borderRadius: '100px',
-               fontSize: '13px',
-                fontWeight: 900,
-                letterSpacing: '0.2em',
-                cursor: 'pointer',
-                transition: 'all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1)',
-                pointerEvents: 'all',
-                boxShadow: '0 4px 12px rgba(13, 27, 62, 0.2)'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#1A2B5A';
-                e.currentTarget.style.transform = 'scale(1.05)';
-                e.currentTarget.style.boxShadow = '0 6px 16px rgba(13, 27, 62, 0.3)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = '#0D1B3E';
-                e.currentTarget.style.transform = 'scale(1)';
-                e.currentTarget.style.boxShadow = '0 4px 12px rgba(13, 27, 62, 0.2)';
-              }}
-            >
-              SKIP
-            </button>
-
-            {/* 背景の装飾：浮遊する幾何学パーツ（イラスト要素） */}
-            <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
-              {[...Array(12)].map((_, i) => (
-                <div key={i} className="opening-bg-shape" style={{
-                  position: 'absolute',
-                  width: '40px',
-                  height: '40px',
-                  border: '1px solid #E2E8F0',
-                  borderRadius: i % 3 === 0 ? '50%' : '8px',
-                  top: `${Math.random() * 100}%`,
-                  left: `${Math.random() * 100}%`,
-                  transform: `rotate(${Math.random() * 360}deg)`
-                }} />
-              ))}
-            </div>
-
-            <div className="opening-overlay-content" style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
-              {/* 事業ドメインを象徴するアイコン群：サークル状に配置 */}
-              <div style={{ position: 'relative', width: windowWidth < 768 ? '220px' : '300px', height: windowWidth < 768 ? '220px' : '300px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                {[
-                  { icon: <Code2 size={windowWidth < 768 ? 20 : 24} />, top: '-10%', left: '50%' },
-                  { icon: <BrainCircuit size={windowWidth < 768 ? 20 : 24} />, top: '25%', left: '110%' },
-                  { icon: <Sparkles size={windowWidth < 768 ? 20 : 24} />, top: '85%', left: '85%' },
-                  { icon: <Rocket size={windowWidth < 768 ? 20 : 24} />, top: '85%', left: '15%' },
-                  { icon: <Zap size={windowWidth < 768 ? 20 : 24} />, top: '25%', left: '-10%' },
-                ].map((item, idx) => (
-                  <div key={idx} className="opening-icon" style={{
-                    position: 'absolute',
-                    top: item.top,
-                    left: item.left,
-                    transform: 'translate(-50%, -50%)',
-                    color: '#94A3B8',
-                    backgroundColor: '#F8FAFC',
-                    padding: windowWidth < 768 ? '10px' : '15px',
-                    borderRadius: '12px',
-                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)'
-                  }}>
-                    {item.icon}
-                  </div>
-                ))}
-
-                {/* 中央のロゴ：文字の間隔を保持しつつ、外側のコンテナと軸を統一 */}
-                <h2 className="opening-logo" style={{
-                  color: '#0D1B3E',
-                  fontSize: windowWidth < 768 ? '2.0rem' : 'clamp(2.5rem, 8vw, 4.5rem)',
-                  fontWeight: 200,
-                  letterSpacing: '1.2em',
-                  padding: 0,
-                  // 右側に残る字間余白をマイナスマージンで相殺し、完全な幾何学的中央を実現
-                  marginRight: '-1.2em'
-                }}>
-                  MEECE
-                </h2>
-              </div>
-              
-              <p className="opening-logo" style={{ 
-                marginTop: '40px', 
-                color: '#94A3B8', 
-                fontSize: '12px', 
-                fontWeight: 600, 
-                letterSpacing: '0.4em',
-                textTransform: 'uppercase',
-                textAlign: 'center',
-                // 右側の字間余白を相殺し、上のロゴと垂直中央軸を完全に一致させる
-                marginRight: '-0.4em'
-              }}>
-                Technology x Design
-              </p>
-            </div>
-          </div>
+          <OpeningAnimation onComplete={handleOpeningComplete} />
         )}
       </AnimatePresence>
 
-      <Navbar />
+      {isOpeningComplete && <Navbar />}
       
       <main style={{ 
         position: 'relative', 
