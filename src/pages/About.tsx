@@ -1,12 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar } from '../components/organisms/Navbar';
 import { Footer } from '../components/organisms/Footer';
-import { PageHero } from '../components/molecules/PageHero'; // PageHeroを読み込む
+import { motion, AnimatePresence } from 'framer-motion';
 // 下記の行を追加してアイコンを使えるようにします
 import { Factory, GraduationCap, Clapperboard, ShoppingCart, Zap, Heart, Building2 } from 'lucide-react';
 
 export const About: React.FC = () => {
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
+
+  const backgroundImages = [
+    "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?q=80&w=2044&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?q=80&w=2040&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?q=80&w=2040&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1514565131-fce0801e5785?q=80&w=2112&auto=format&fit=crop"
+  ];
+  const [bgIndex, setBgIndex] = useState(0);
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -14,19 +22,94 @@ export const About: React.FC = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  useEffect(() => {
+    const bgTimer = setInterval(() => {
+      setBgIndex((prev) => (prev + 1) % backgroundImages.length);
+    }, 10000);
+    return () => clearInterval(bgTimer);
+  }, []);
+
   return (
     <div style={{ backgroundColor: '#FFFFFF', minHeight: '100vh', width: '100%', overflowX: 'hidden' }}>
       <Navbar />
-      
+
       <main>
-        {/* 共通のメインビジュアル部品を呼び出し */}
-        <PageHero 
-          label="ABOUT / 私たちのこと"
-          titleTop="すべての産業を、"
-          titleGradient="ITの最適解でつなぐ。"
-          description="Meece株式会社は、高度な技術力と多角的な視点で、社会全体のデジタルトランスフォーメーションを最適化するプロフェッショナル集団です。"
-          windowWidth={windowWidth}
-        />
+        {/* ヒーローセクション（TOPページと同スタイルのシネマティックレイアウト） */}
+        <section style={{ position: 'relative', width: '100%', height: '100vh', overflow: 'hidden', backgroundColor: '#000814' }}>
+          {/* 背景：切り替わる都市景色 */}
+          <div style={{ position: 'absolute', inset: 0, zIndex: 0, backgroundColor: '#000' }}>
+            <AnimatePresence mode="popLayout">
+              <motion.img
+                key={backgroundImages[bgIndex]}
+                src={backgroundImages[bgIndex]}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 2.0, ease: "easeInOut" }}
+                alt="City Background"
+                style={{
+                  position: 'absolute',
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  filter: 'brightness(1.1) contrast(1.05) saturate(1.2) hue-rotate(-5deg)'
+                }}
+              />
+            </AnimatePresence>
+            <div style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(0, 8, 20, 0.4) 100%)'
+            }} />
+          </div>
+
+          {/* コンテンツレイヤー */}
+          <div style={{ position: 'relative', zIndex: 10, height: '100%', width: '100%', boxSizing: 'border-box' }}>
+            <div style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: windowWidth < 768 ? '100px 20px 60px' : '80px 100px' }}>
+
+              {/* TOP: スローガン（縦書き） */}
+              <div style={{ display: 'flex', justifyContent: 'flex-end', position: windowWidth < 768 ? 'absolute' : 'relative', right: windowWidth < 768 ? '20px' : 'auto', top: windowWidth < 768 ? '100px' : 'auto' }}>
+                <div style={{
+                  color: 'white',
+                  writingMode: 'vertical-rl',
+                  fontSize: windowWidth < 768 ? '12px' : 'clamp(0.9rem, 1.2vw, 1.1rem)',
+                  letterSpacing: '0.6em',
+                  fontWeight: 600,
+                  textShadow: '0 0 20px rgba(0,251,255,0.5)'
+                }}>
+                  すべての産業を、<br />
+                  ITの最適解でつなぐ。
+                </div>
+              </div>
+
+              {/* MIDDLE: タイトル */}
+              <div style={{ textAlign: 'left', marginTop: 'auto', marginBottom: windowWidth < 768 ? '40px' : '0' }}>
+                <h1 style={{
+                  color: 'white',
+                  fontSize: windowWidth < 768 ? 'clamp(2.5rem, 12vw, 4rem)' : 'clamp(3rem, 8vw, 7.5rem)',
+                  fontWeight: 900,
+                  lineHeight: 0.85,
+                  letterSpacing: '-0.04em',
+                  textTransform: 'uppercase',
+                  margin: 0
+                }}>
+                  ABOUT<br />
+                  MEECE
+                </h1>
+              </div>
+
+              {/* BOTTOM: 署名バー */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: windowWidth < 768 ? '15px' : '30px', width: '100%', borderTop: '1px solid rgba(255,255,255,0.2)', paddingTop: windowWidth < 768 ? '20px' : '30px' }}>
+                <div style={{ backgroundColor: 'white', color: '#000814', padding: windowWidth < 768 ? '6px 15px' : '10px 25px', borderRadius: '2px', fontWeight: 950, fontSize: windowWidth < 768 ? '18px' : '24px', letterSpacing: '0.1em' }}>
+                  MEECE
+                </div>
+                <p style={{ color: 'white', fontSize: windowWidth < 768 ? '10px' : '13px', letterSpacing: '0.3em', fontWeight: 800 }}>
+                  ABOUT / 私たちのこと
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
 
         {/* 画像2枚目：社名の由来（アシンメトリー・ダイナミックレイアウト） */}
         <section style={{ 

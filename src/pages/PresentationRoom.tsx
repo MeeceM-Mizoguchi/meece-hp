@@ -379,12 +379,14 @@ export const PresentationRoom: React.FC = () => {
               )}
             </AnimatePresence>
 
-            {/* スライド番号 */}
-            <div className="absolute top-10 right-16 z-20">
-              <span className="text-sm font-black tracking-[0.2em] text-slate-300">
-                {String(currentSlide).padStart(2, '0')} / {String(totalSlides).padStart(2, '0')}
-              </span>
-            </div>
+            {/* スライド番号（1枚目は非表示） */}
+            {currentSlide !== 1 && (
+              <div className="absolute top-10 right-16 z-20">
+                <span className="text-sm font-black tracking-[0.2em] text-slate-300">
+                  {String(currentSlide).padStart(2, '0')} / {String(totalSlides).padStart(2, '0')}
+                </span>
+              </div>
+            )}
           </div>
 
           {/* ナレーション & コントロールバー */}

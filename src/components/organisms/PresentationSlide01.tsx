@@ -1,6 +1,5 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Sparkles, Rocket, Cpu, Search, CheckCircle2 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface PresentationSlide01Props {
   slideRef: React.RefObject<HTMLDivElement | null>;
@@ -11,6 +10,21 @@ interface PresentationSlide01Props {
 }
 
 export const PresentationSlide01: React.FC<PresentationSlide01Props> = ({ slideRef, data }) => {
+  const backgroundImages = [
+    "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?q=80&w=2044&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?q=80&w=2040&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?q=80&w=2040&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1514565131-fce0801e5785?q=80&w=2112&auto=format&fit=crop"
+  ];
+  const [bgIndex, setBgIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setBgIndex((prev) => (prev + 1) % backgroundImages.length);
+    }, 10000);
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <motion.div
       ref={slideRef}
@@ -18,67 +32,80 @@ export const PresentationSlide01: React.FC<PresentationSlide01Props> = ({ slideR
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ scale: 0, opacity: 0, transition: { duration: 0.8, ease: "circIn" } }}
-      className="absolute inset-0 flex flex-col md:flex-row items-stretch"
+      style={{ position: 'absolute', inset: 0, backgroundColor: '#000814' }}
     >
-      {/* スライド01：Opening ビジュアル（左） */}
-      <div className="w-full h-[40%] md:h-auto md:w-1/2 relative overflow-hidden bg-black">
-        <video
-          src="/main.mp4"
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover opacity-60"
-        />
-        <div className="absolute inset-0 bg-slate-950/40" />
-        <div className="absolute inset-0 bg-stars opacity-40 animate-star-flow" />
-      </div>
-
-      {/* スライド01：Opening テキスト（右） */}
-      <div className="w-full h-[60%] md:h-auto md:w-1/2 p-8 md:p-16 flex flex-col justify-center bg-white">
-        <motion.div 
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.5 }}
-          className="mb-2 md:mb-4 flex items-center gap-4"
-        >
-          <div className="flex items-center gap-2">
-            <Sparkles size={14} className="text-meece-blue" />
-            <span className="text-[11px] tracking-[0.4em] font-black text-meece-blue uppercase">{data.label}</span>
-          </div>
-          <div className="flex items-center gap-1 opacity-20">
-            <Rocket size={12} />
-            <Cpu size={12} />
-            <Search size={12} />
-            <CheckCircle2 size={12} />
-          </div>
-        </motion.div>
-
-        <h1 className="text-3xl md:text-[3.5rem] leading-[1.1] font-black tracking-tighter mb-4 md:mb-8 text-slate-900">
-          <motion.span 
+      {/* 背景：TOPページと同じ都市景色スライドショー */}
+      <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
+        <AnimatePresence mode="popLayout">
+          <motion.img
+            key={backgroundImages[bgIndex]}
+            src={backgroundImages[bgIndex]}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 1, duration: 1.5 }}
-            className="bg-linear-to-r from-meece-blue via-meece-purple to-meece-pink bg-clip-text text-transparent"
-          >
-            ITで社会を支え、<br/>物語を完成させる。
-          </motion.span>
-        </h1>
+            exit={{ opacity: 0 }}
+            transition={{ duration: 2.0, ease: "easeInOut" }}
+            alt="City Background"
+            style={{
+              position: 'absolute',
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              filter: 'brightness(1.1) contrast(1.05) saturate(1.2) hue-rotate(-5deg)'
+            }}
+          />
+        </AnimatePresence>
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          background: 'linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(0, 8, 20, 0.4) 100%)'
+        }} />
+      </div>
 
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 2 }}
-          className="space-y-4 mb-6 md:mb-12"
-        >
-          <p className="text-lg md:text-xl text-slate-500 font-light tracking-tight">
-            {data?.description}
-          </p>
-        </motion.div>
+      {/* コンテンツレイヤー */}
+      <div style={{ position: 'relative', zIndex: 10, height: '100%', width: '100%', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', padding: '24px 48px' }}>
 
-        <div className="flex items-center gap-4 mt-4 md:mt-auto opacity-40">
-          <div className="h-px w-12 bg-slate-900" />
-          <span className="text-[10px] tracking-[0.3em] text-slate-900 font-black uppercase italic">Presented by Meece Inc.</span>
+        {/* 縦書きスローガン: 絶対配置でレイアウトに影響させない */}
+        <div style={{ position: 'absolute', top: '24px', right: '48px', maxHeight: '60%', overflow: 'hidden' }}>
+          <div style={{
+            color: 'white',
+            writingMode: 'vertical-rl',
+            fontSize: '10px',
+            letterSpacing: '0.4em',
+            fontWeight: 600,
+            textShadow: '0 0 20px rgba(0,251,255,0.5)'
+          }}>
+            時代をまたぎ、新しいデジタルをデザインする。
+          </div>
+        </div>
+
+        {/* スペーサー */}
+        <div style={{ flex: 1 }} />
+
+        {/* タイトル */}
+        <div style={{ marginBottom: '14px' }}>
+          <h1 style={{
+            color: 'white',
+            fontSize: 'clamp(1.6rem, 3.8vw, 3.8rem)',
+            fontWeight: 900,
+            lineHeight: 0.88,
+            letterSpacing: '-0.04em',
+            textTransform: 'uppercase',
+            margin: 0
+          }}>
+            DIGITAL<br />
+            CREATIVE<br />
+            FIRM
+          </h1>
+        </div>
+
+        {/* 署名バー */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', width: '100%', borderTop: '1px solid rgba(255,255,255,0.2)', paddingTop: '12px', flexShrink: 0 }}>
+          <div style={{ backgroundColor: 'white', color: '#000814', padding: '5px 12px', borderRadius: '2px', fontWeight: 950, fontSize: '13px', letterSpacing: '0.1em', flexShrink: 0 }}>
+            MEECE
+          </div>
+          <p style={{ color: 'white', fontSize: '9px', letterSpacing: '0.25em', fontWeight: 800, margin: 0 }}>
+            INNOVATION GUIDE 2026
+          </p>
         </div>
       </div>
     </motion.div>
